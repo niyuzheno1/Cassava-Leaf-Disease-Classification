@@ -27,7 +27,6 @@ from src import (
     transformation,
     utils,
     models,
-    train,
     inference,
     trainer,
     dataset,
@@ -46,7 +45,8 @@ FOLDS = global_params.MakeFolds()
 MODEL = global_params.ModelParams()
 LOADER_PARAMS = global_params.DataLoaderParams()
 TRAIN_PARAMS = global_params.GlobalTrainParams()
-
+SCHEDULER_PARAMS = global_params.SchedulerParams()
+OPTIMIZER_PARAMS = global_params.OptimizerParams()
 
 device = config.DEVICE
 
@@ -88,18 +88,17 @@ def train_one_fold(df_folds: pd.DataFrame, fold: int, is_plot: bool = False):
     model = models.CustomNeuralNet().to(device)
     try:
         config.logger.info("Model Summary:")
-        print(model)
+
         torchsummary.summary(model, (3, 224, 224))
     except RuntimeError:
         config.logger.debug("Check the channel number.")
 
-    optimizer = torch.optim.AdamW(
-        model.parameters(),
-        lr=TRAIN_PARAMS.init_lr,
-        weight_decay=TRAIN_PARAMS.weight_decay,
-        amsgrad=False,
+    optimizer = trainer.get_optimizer(
+        model=model, optimizer_params=OPTIMIZER_PARAMS
     )
-    scheduler = train.get_scheduler(optimizer)
+    scheduler = trainer.get_scheduler(
+        optimizer, scheduler_params=SCHEDULER_PARAMS
+    )
     reighns_trainer: trainer.Trainer = trainer.Trainer(
         params=TRAIN_PARAMS,
         model=model,

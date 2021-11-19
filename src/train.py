@@ -46,7 +46,9 @@ class MetricMonitor:
         return " | ".join(
             [
                 "{metric_name}: {avg:.{float_precision}f}".format(
-                    metric_name=metric_name, avg=metric["avg"], float_precision=self.float_precision
+                    metric_name=metric_name,
+                    avg=metric["avg"],
+                    float_precision=self.float_precision,
                 )
                 for (metric_name, metric) in self.metrics.items()
             ]
@@ -102,7 +104,11 @@ def train_fn(
             images = images.to(params["device"], non_blocking=True)
             # dense = dense.to(params["device"], non_blocking=True)
 
-            target = target.to(params["device"], non_blocking=True).float().view(-1, 1)
+            target = (
+                target.to(params["device"], non_blocking=True)
+                .float()
+                .view(-1, 1)
+            )
 
         output = model(images)
 
@@ -135,16 +141,24 @@ def validate_fn(val_loader, model, criterion, epoch, params):
             images, target = data["X"], data["y"]
             images = images.to(params["device"], non_blocking=True)
             # dense = dense.to(params["device"], non_blocking=True)
-            target = target.to(params["device"], non_blocking=True).float().view(-1, 1)
+            target = (
+                target.to(params["device"], non_blocking=True)
+                .float()
+                .view(-1, 1)
+            )
             output = model(images)
             loss = criterion(output, target)
             rmse_score = use_rmse_score(output, target)
             metric_monitor.update("Loss", loss.item())
             metric_monitor.update("RMSE", rmse_score)
-            stream.set_description(f"Epoch: {epoch:02}. Valid. {metric_monitor}")
+            stream.set_description(
+                f"Epoch: {epoch:02}. Valid. {metric_monitor}"
+            )
 
             targets = (target.detach().cpu().numpy() * 100).tolist()
-            outputs = (torch.sigmoid(output).detach().cpu().numpy() * 100).tolist()
+            outputs = (
+                torch.sigmoid(output).detach().cpu().numpy() * 100
+            ).tolist()
 
             final_targets.extend(targets)
             final_outputs.extend(outputs)

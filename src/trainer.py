@@ -10,7 +10,7 @@ import pytz
 import torch
 from torch._C import device
 from config import config, global_params
-from src import metrics
+from src import metrics, models
 
 # Metrics
 from sklearn.metrics import (
@@ -33,7 +33,44 @@ from pytorch_grad_cam import GradCAM
 import torchmetrics
 
 FILES = global_params.FilePaths()
-train_params = global_params.GlobalTrainParams()
+TRAIN_PARAMS = global_params.GlobalTrainParams()
+
+
+def get_optimizer(
+    model: models.CustomNeuralNet,
+    optimizer_params: global_params.OptimizerParams(),
+):
+    """Get the optimizer for the model.
+
+    Args:
+        model (models.CustomNeuralNet): [description]
+        optimizer_params (global_params.OptimizerParams): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    return getattr(torch.optim, optimizer_params.optimizer_name)(
+        model.parameters(), **optimizer_params.optimizer_params
+    )
+
+
+def get_scheduler(
+    optimizer: torch.optim,
+    scheduler_params: global_params.SchedulerParams(),
+):
+    """Get the scheduler for the optimizer.
+
+    Args:
+        optimizer (torch.optim): [description]
+        scheduler_params (global_params.SchedulerParams(), optional): [description]. Defaults to SCHEDULER_PARAMS.scheduler_params.
+
+    Returns:
+        [type]: [description]
+    """
+
+    return getattr(torch.optim.lr_scheduler, scheduler_params.scheduler_name)(
+        optimizer=optimizer, **scheduler_params.scheduler_params
+    )
 
 
 class Trainer:
@@ -156,13 +193,6 @@ class Trainer:
         # train start time
         val_start_time = time.time()
 
-        # (
-        #     self.valid_loss_history,
-        #     self.valid_trues_history,
-        #     self.valid_preds_history,
-        #     self.valid_probs_history,
-        # ) = ([], [], [], [])
-
         # get avg train loss for this epoch
         valid_one_epoch_dict = self.valid_one_epoch(val_loader)
 
@@ -177,10 +207,6 @@ class Trainer:
             valid_one_epoch_dict["valid_preds"],
             valid_one_epoch_dict["valid_probs"],
         )
-        # self.valid_loss_history.append(self.valid_loss)
-        # self.valid_trues_history.append(self.valid_trues)
-        # self.valid_preds_history.append(self.valid_preds)
-        # self.valid_probs_history.append(self.valid_probs)
 
         # total time elapsed for this epoch
 
@@ -348,7 +374,7 @@ class Trainer:
 
             batch_size = inputs.shape[0]
             assert targets.size() == (batch_size,)
-            assert logits.size() == (batch_size, train_params.num_classes)
+            assert logits.size() == (batch_size, TRAIN_PARAMS.num_classes)
 
             y_train_prob = torch.nn.Softmax(dim=1)(logits)
             # sigmoid_prob = torch.sigmoid(logits).detach().cpu().numpy()
@@ -402,7 +428,7 @@ class Trainer:
                 # get batch size, may not be same as params.batch_size due to whether drop_last in loader is True or False.
                 batch_size = inputs.shape[0]
                 assert targets.size() == (batch_size,)
-                assert logits.size() == (batch_size, train_params.num_classes)
+                assert logits.size() == (batch_size, TRAIN_PARAMS.num_classes)
 
                 # Store outputs that are needed to compute various metrics
                 # shape = [bs, 1] | shape = [bs, num_classes] if softmax
