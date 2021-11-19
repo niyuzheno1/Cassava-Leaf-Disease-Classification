@@ -402,3 +402,141 @@ In Channels: 3
 Time: 2021-11-19 23-59-37
 LR: 0.0001
 2021-11-20 00:00:03,221 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.216 | Time Elapsed: 00:00:25
+2021-11-20 00:12:39,460 - Model: tf_efficientnet_b4_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 00:12:39,599 - Model Summary:
+2021-11-20 00:12:41,091 - Training on Fold 1 and using tf_efficientnet_b4_ns
+2021-11-20 00:12:41,126 - 
+Time: 2021-11-20 00-12-41
+LR: 0.0001
+2021-11-20 00:13:04,195 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.216 | Time Elapsed: 00:00:23
+2021-11-20 00:16:14,242 - Model: tf_efficientnet_b4_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 00:16:14,372 - Model Summary:
+2021-11-20 00:16:15,837 - Training on Fold 1 and using tf_efficientnet_b4_ns
+2021-11-20 00:16:15,869 - 
+Time: 2021-11-20 00-16-15
+LR: 0.0001
+2021-11-20 00:16:38,908 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.396 | Time Elapsed: 00:00:23
+2021-11-20 00:19:48,729 - Model: tf_efficientnet_b4_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 00:19:48,850 - Model Summary:
+2021-11-20 00:19:50,318 - Training on Fold 1 and using tf_efficientnet_b4_ns
+2021-11-20 00:19:50,359 - 
+Time: 2021-11-20 00-19-50
+LR: 0.0001
+2021-11-20 00:20:13,290 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.396 | Time Elapsed: 00:00:22
+2021-11-20 00:26:22,738 - Model: tf_efficientnet_b4_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 00:26:22,868 - Model Summary:
+2021-11-20 00:26:24,400 - Training on Fold 1 and using tf_efficientnet_b4_ns
+2021-11-20 00:26:24,435 - 
+Time: 2021-11-20 00-26-24
+LR: 0.0001
+2021-11-20 00:26:47,837 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.396 | Time Elapsed: 00:00:23
+2021-11-20 00:39:30,972 - Model: tf_efficientnet_b4_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 00:39:39,842 - Model: tf_efficientnet_b4_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 00:39:39,978 - Model Summary:
+2021-11-20 00:39:39,996 - Training on Fold 1 and using tf_efficientnet_b4_ns
+2021-11-20 00:39:40,037 - 
+Time: 2021-11-20 00-39-40
+LR: 0.0001
+2021-11-20 00:40:26,940 - Model: tf_efficientnet_b4_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 00:40:27,085 - Model Summary:
+2021-11-20 00:40:28,578 - Training on Fold 1 and using tf_efficientnet_b4_ns
+2021-11-20 00:40:28,612 - 
+Time: 2021-11-20 00-40-28
+LR: 0.0001
+2021-11-20 00:40:51,922 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.396 | Time Elapsed: 00:00:23
+2021-11-20 00:43:25,412 - Model: tf_efficientnet_b4_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 00:43:25,544 - Model Summary:
+2021-11-20 00:43:27,024 - Training on Fold 1 and using tf_efficientnet_b4_ns
+2021-11-20 00:43:27,058 - 
+Time: 2021-11-20 00-43-27
+LR: 0.0001
+2021-11-20 00:43:50,512 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.396 | Time Elapsed: 00:00:23
+2021-11-20 00:48:25,084 - Model: tf_efficientnet_b4_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 00:48:25,214 - Model Summary:
+2021-11-20 00:48:26,734 - Training on Fold 1 and using tf_efficientnet_b4_ns
+2021-11-20 00:48:26,768 - 
+Time: 2021-11-20 00-48-26
+LR: 0.0001
+2021-11-20 00:48:49,603 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.396 | Time Elapsed: 00:00:22
+2021-11-20 00:55:10,463 - Model: tf_efficientnet_b4_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 00:55:10,622 - Model Summary:
+2021-11-20 00:55:12,249 - Training on Fold 1 and using tf_efficientnet_b4_ns
+2021-11-20 00:55:12,291 - 
+Time: 2021-11-20 00-55-12
+LR: 0.0001
+2021-11-20 00:55:43,584 - Model: tf_efficientnet_b4_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 00:55:43,718 - Model Summary:
+2021-11-20 00:55:45,216 - Training on Fold 1 and using tf_efficientnet_b4_ns
+2021-11-20 00:55:45,250 - 
+Time: 2021-11-20 00-55-45
+LR: 0.0001
+2021-11-20 00:57:03,270 - Model: tf_efficientnet_b4_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 00:57:03,404 - Model Summary:
+2021-11-20 00:57:04,889 - Training on Fold 1 and using tf_efficientnet_b4_ns
+2021-11-20 00:57:04,922 - 
+Time: 2021-11-20 00-57-04
+LR: 0.001
+2021-11-20 00:57:29,562 - Model: tf_efficientnet_b4_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 00:57:29,716 - Model Summary:
+2021-11-20 00:57:31,307 - Training on Fold 1 and using tf_efficientnet_b4_ns
+2021-11-20 00:57:31,341 - 
+Time: 2021-11-20 00-57-31
+LR: 0.001
+2021-11-20 00:57:54,424 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.038 | Time Elapsed: 00:00:23
+2021-11-20 00:59:10,421 - Model: tf_efficientnet_b4_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 00:59:10,560 - Model Summary:
+2021-11-20 00:59:12,011 - Training on Fold 1 and using tf_efficientnet_b4_ns
+2021-11-20 00:59:12,044 - 
+Time: 2021-11-20 00-59-12
+LR: 0.001
+2021-11-20 00:59:35,032 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.038 | Time Elapsed: 00:00:22
+2021-11-20 01:00:24,416 - Model: tf_efficientnet_b4_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 01:00:24,568 - Model Summary:
+2021-11-20 01:00:26,025 - Training on Fold 1 and using tf_efficientnet_b4_ns
+2021-11-20 01:00:26,059 - 
+Time: 2021-11-20 01-00-26
+LR: 0.001
+2021-11-20 01:00:49,057 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.038 | Time Elapsed: 00:00:22
+2021-11-20 01:01:39,944 - Model: tf_efficientnet_b4_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 01:01:40,078 - Model Summary:
+2021-11-20 01:01:47,738 - Model: tf_efficientnet_b4_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 01:01:47,894 - Model Summary:
+2021-11-20 01:01:49,345 - Training on Fold 1 and using tf_efficientnet_b4_ns
+2021-11-20 01:01:49,379 - 
+Time: 2021-11-20 01-01-49
+LR: 0.001
+2021-11-20 01:02:15,456 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.002 | Time Elapsed: 00:00:26

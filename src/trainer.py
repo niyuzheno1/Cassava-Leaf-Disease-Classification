@@ -119,6 +119,7 @@ class Trainer:
         Returns:
             [type]: [description]
         """
+
         loss_fn = torch.nn.CrossEntropyLoss()
         loss = loss_fn(y_logits, y_true)
         return loss
@@ -239,7 +240,6 @@ class Trainer:
             [type]: [description]
         """
         best_val_loss = np.inf
-        best_rmse = np.inf
 
         config.logger.info(
             f"Training on Fold {fold} and using {self.params.model_name}"
@@ -287,14 +287,16 @@ class Trainer:
                 self.valid_preds_history,
                 self.valid_probs_history,
             )
+            print(self.valid_loss_history)
             print(self.valid_accuracy)
+            # TODO: Still need save each metric for each epoch into a list history. Rename properly
 
             # Note that train_dict['train_loss'] returns a list of loss [0.3, 0.2, 0.1 etc] and since _epoch starts from 1, we therefore
             # index this list by _epoch - 1 to get the current epoch loss.
 
             config.logger.info(
                 f"[RESULT]: Validation. Epoch {_epoch} | Avg Val Summary Loss: {self.val_dict['val_loss'][_epoch-1]:.3f} | "
-                f"Time Elapsed: {self.val_dict['time_elapsed']}"
+                f"Time Elapsed: {self.valid_time_elapsed}"
             )
 
             # self.log_scalar("Val Acc", val_dict["valid_rmse"][_epoch - 1], _epoch)
@@ -368,8 +370,6 @@ class Trainer:
 
             # # .view(-1, 1)
             targets = data["y"].to(self.device, non_blocking=True)
-
-            self.optimizer.zero_grad()  # reset gradients
             logits = self.model(inputs)  # Forward pass logits
 
             batch_size = inputs.shape[0]
@@ -379,6 +379,7 @@ class Trainer:
             y_train_prob = torch.nn.Softmax(dim=1)(logits)
             # sigmoid_prob = torch.sigmoid(logits).detach().cpu().numpy()
 
+            self.optimizer.zero_grad()  # reset gradients
             curr_batch_train_loss = self.train_criterion(targets, logits)
             curr_batch_train_loss.backward()  # Backward pass
             metric_monitor.update(
@@ -397,9 +398,9 @@ class Trainer:
                 - average_cumulative_train_loss
             ) / (step)
 
-            # self.log_weights(step)
-            # running loss
-            # self.log_scalar("running_train_loss", curr_batch_train_loss.data.item(), step)
+        # self.log_weights(step)
+        # running loss
+        # self.log_scalar("running_train_loss", curr_batch_train_loss.data.item(), step)
         return {"train_loss": average_cumulative_train_loss}
 
     # @torch.no_grad

@@ -88,7 +88,7 @@ class AugmentationParams:
 
     mean: List[float]
     std: List[float]
-    image_size: int = 224
+    image_size: int = 256
 
 
 @dataclass
@@ -123,7 +123,13 @@ class OptimizerParams:
 
     optimizer_name: str = "AdamW"
     optimizer_params: Dict[str, Any] = field(
-        default_factory=lambda: {"lr": 1e-4, "weight_decay": 1e-6}
+        default_factory=lambda: {
+            "lr": 1e-3,
+            "betas": (0.9, 0.999),
+            "amsgrad": False,
+            "weight_decay": 1e-3,
+            "eps": 1e-08,
+        }
     )
 
 
@@ -148,5 +154,4 @@ class GlobalTrainParams:
     epochs: int = 3
     mixup: bool = False
     model_name: str = ModelParams().model_name
-
     num_classes: int = ModelParams().output_dimension

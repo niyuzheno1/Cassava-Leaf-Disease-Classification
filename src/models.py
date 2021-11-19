@@ -42,13 +42,15 @@ class CustomNeuralNet(torch.nn.Module):
 
         self.in_features = self.backbone.num_features
 
+        # self.single_head_fc = torch.nn.Sequential(
+        #     torch.nn.Linear(self.in_features, self.in_features),
+        #     torch.nn.ReLU(),
+        #     torch.nn.Dropout(p=0.2),
+        #     torch.nn.Linear(self.in_features, out_features),
+        # )
         self.single_head_fc = torch.nn.Sequential(
-            torch.nn.Linear(self.in_features, self.in_features),
-            torch.nn.ReLU(),
-            torch.nn.Dropout(p=0.2),
             torch.nn.Linear(self.in_features, out_features),
         )
-
         self.architecture: Dict[str, Callable] = {
             "backbone": self.backbone,
             "bottleneck": None,
@@ -72,6 +74,7 @@ class CustomNeuralNet(torch.nn.Module):
 
         feature_logits = self.extract_features(image)
         classifier_logits = self.architecture["head"](feature_logits)
+
         return classifier_logits
 
     def get_last_layer(self):

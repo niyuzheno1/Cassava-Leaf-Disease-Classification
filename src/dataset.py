@@ -6,7 +6,7 @@ import torch
 from config import global_params
 
 TRANSFORMS = global_params.AugmentationParams(
-    mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], image_size=224
+    mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], image_size=256
 )
 FOLDS = global_params.MakeFolds()
 
