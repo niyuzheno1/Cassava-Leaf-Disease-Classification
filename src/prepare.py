@@ -68,10 +68,10 @@ def prepare_loaders(
 
     if TRAIN_PARAMS.debug:
         df_train = df_folds[df_folds["fold"] != fold].sample(
-            LOADER_PARAMS.train_loader["batch_size"] * 8
+            LOADER_PARAMS.train_loader["batch_size"] * 32
         )
         df_valid = df_folds[df_folds["fold"] == fold].sample(
-            LOADER_PARAMS.train_loader["batch_size"] * 8
+            LOADER_PARAMS.train_loader["batch_size"] * 32
         )
         df_oof = df_valid.copy()
     else:

@@ -100,16 +100,11 @@ class Trainer:
         loss = loss_fn(y_logits, y_true)
         return loss
 
-    def get_classification_metrics(self, y_trues, y_preds, y_probs):
-        print(y_trues, y_preds, y_probs)
-        # Note that valid_one_epoch does not need to detach.
-        y_true, y_pred, y_prob = (
-            y_trues.cpu().numpy(),
-            y_preds.cpu().numpy(),
-            y_probs.cpu().numpy(),
-        )
+    def get_classification_metrics(
+        self, y_trues_history, y_preds_history, y_probs_history
+    ):
 
-        accuracy = accuracy_score(y_true, y_pred)
+        accuracy = accuracy_score(y_trues_history, y_preds_history)
         return {"accuracy": accuracy}
 
     def get_lr(self, optimizer) -> float:
@@ -161,32 +156,32 @@ class Trainer:
         # train start time
         val_start_time = time.time()
 
-        (
-            self.valid_loss_history,
-            self.valid_trues_history,
-            self.valid_preds_history,
-            self.valid_probs_history,
-        ) = ([], [], [], [])
+        # (
+        #     self.valid_loss_history,
+        #     self.valid_trues_history,
+        #     self.valid_preds_history,
+        #     self.valid_probs_history,
+        # ) = ([], [], [], [])
 
         # get avg train loss for this epoch
         valid_one_epoch_dict = self.valid_one_epoch(val_loader)
 
         (
-            self.valid_loss,
-            self.valid_trues,
-            self.valid_preds,
-            self.valid_probs,
+            self.valid_loss_history,
+            self.valid_trues_history,
+            self.valid_preds_history,
+            self.valid_probs_history,
         ) = (
             valid_one_epoch_dict["valid_loss"],
             valid_one_epoch_dict["valid_trues"],
             valid_one_epoch_dict["valid_preds"],
             valid_one_epoch_dict["valid_probs"],
         )
-        self.valid_loss_history.append(self.valid_loss)
-        self.valid_trues_history.append(self.valid_trues)
-        self.valid_preds_history.append(self.valid_preds)
-        self.valid_probs_history.append(self.valid_probs)
-        print(self.valid_trues_history)
+        # self.valid_loss_history.append(self.valid_loss)
+        # self.valid_trues_history.append(self.valid_trues)
+        # self.valid_preds_history.append(self.valid_preds)
+        # self.valid_probs_history.append(self.valid_probs)
+
         # total time elapsed for this epoch
 
         val_elapsed_time = time.strftime(
@@ -194,10 +189,10 @@ class Trainer:
         )
 
         return {
-            "valid_loss": self.val_loss_history,
-            "valid_trues": self.valid_trues_history,
-            "valid_preds": self.valid_preds_history,
-            "valid_probs": self.valid_probs_history,
+            "valid_loss_history": self.valid_loss_history,
+            "valid_trues_history": self.valid_trues_history,
+            "valid_preds_history": self.valid_preds_history,
+            "valid_probs_history": self.valid_probs_history,
             "valid_time_elapsed": val_elapsed_time,
         }
 
@@ -244,17 +239,27 @@ class Trainer:
                 f"Time Elapsed: {train_dict['time_elapsed']}"
             )
 
-            self.val_dict: Dict = self.run_val(val_loader)
+            self.valid_dict: Dict = self.run_val(val_loader)
             (
-                self.valid_loss,
-                self.valid_trues,
-                self.valid_preds,
-                self.valid_probs,
+                self.valid_loss_history,
+                self.valid_trues_history,
+                self.valid_preds_history,
+                self.valid_probs_history,
                 self.valid_time_elapsed,
-            ) = self.val_dict
+            ) = (
+                self.valid_dict["valid_loss_history"],
+                self.valid_dict["valid_trues_history"],
+                self.valid_dict["valid_preds_history"],
+                self.valid_dict["valid_probs_history"],
+                self.valid_dict["valid_time_elapsed"],
+            )
 
+            print(self.valid_preds_history)
+            print(self.valid_trues_history)
             self.valid_accuracy = self.get_classification_metrics(
-                self.valid_trues, self.valid_preds, self.valid_probs
+                self.valid_trues_history,
+                self.valid_preds_history,
+                self.valid_probs_history,
             )
             print(self.valid_accuracy)
 
@@ -413,8 +418,8 @@ class Trainer:
                 ) / (step)
 
                 # for OOF score and other computation
-                valid_preds.extend(y_valid_pred)
-                valid_probs.extend(y_valid_prob)
+                valid_preds.extend(y_valid_pred.cpu().numpy())
+                valid_probs.extend(y_valid_prob.cpu().numpy())
                 valid_trues.extend(targets.cpu().numpy())
                 valid_logits.extend(logits.cpu().numpy())
                 # TODO: To make this look like what Ian and me did in our breast cancer project.
