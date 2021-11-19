@@ -68,10 +68,10 @@ def prepare_loaders(
 
     if TRAIN_PARAMS.debug:
         df_train = df_folds[df_folds["fold"] != fold].sample(
-            LOADER_PARAMS.train_loader["batch_size"] * 32
+            LOADER_PARAMS.train_loader["batch_size"] * 8
         )
         df_valid = df_folds[df_folds["fold"] == fold].sample(
-            LOADER_PARAMS.train_loader["batch_size"] * 32
+            LOADER_PARAMS.train_loader["batch_size"] * 8
         )
         df_oof = df_valid.copy()
     else:
@@ -80,10 +80,10 @@ def prepare_loaders(
         # Initiate OOF dataframe for this fold (same as df_valid).
         df_oof = df_valid.copy()
 
-    dataset_train = dataset.PawpularityDataset(
+    dataset_train = dataset.CustomDataset(
         df_train, transforms=transformation.get_train_transforms(), mode="train"
     )
-    dataset_valid = dataset.PawpularityDataset(
+    dataset_valid = dataset.CustomDataset(
         df_valid, transforms=transformation.get_valid_transforms(), mode="train"
     )
 

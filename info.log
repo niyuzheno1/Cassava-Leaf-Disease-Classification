@@ -43,3 +43,230 @@ In Channels: 3
 y: torch.Size([4, 1])
 2021-11-19 19:37:14,309 - x[0][0][0]: -0.33575472235679626 
 y[0][0][0]: 0.0663692057132721
+2021-11-19 20:31:35,247 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 20:31:35,362 - Model Summary:
+2021-11-19 20:31:36,940 - Training on Fold 1 and using resnet34d
+2021-11-19 20:31:38,159 - 
+Time: 2021-11-19 20-31-38
+LR: 1e-05
+2021-11-19 20:37:08,864 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 20:37:08,981 - Model Summary:
+2021-11-19 20:37:10,427 - Training on Fold 1 and using resnet34d
+2021-11-19 20:37:10,460 - 
+Time: 2021-11-19 20-37-10
+LR: 1e-05
+2021-11-19 20:38:10,761 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 20:38:10,872 - Model Summary:
+2021-11-19 20:38:12,383 - Training on Fold 1 and using resnet34d
+2021-11-19 20:38:12,417 - 
+Time: 2021-11-19 20-38-12
+LR: 1e-05
+2021-11-19 20:44:25,298 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 20:44:25,425 - Model Summary:
+2021-11-19 20:44:27,007 - Training on Fold 1 and using resnet34d
+2021-11-19 20:44:27,042 - 
+Time: 2021-11-19 20-44-27
+LR: 1e-05
+2021-11-19 20:51:18,746 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 20:51:18,891 - Model Summary:
+2021-11-19 20:51:20,392 - Training on Fold 1 and using resnet34d
+2021-11-19 20:51:20,426 - 
+Time: 2021-11-19 20-51-20
+LR: 1e-05
+2021-11-19 20:52:10,877 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 20:52:11,009 - Model Summary:
+2021-11-19 20:52:12,520 - Training on Fold 1 and using resnet34d
+2021-11-19 20:52:12,552 - 
+Time: 2021-11-19 20-52-12
+LR: 1e-05
+2021-11-19 20:53:16,031 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 20:53:16,141 - Model Summary:
+2021-11-19 20:53:17,624 - Training on Fold 1 and using resnet34d
+2021-11-19 20:53:17,660 - 
+Time: 2021-11-19 20-53-17
+LR: 1e-05
+2021-11-19 21:03:12,340 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:03:12,472 - Model Summary:
+2021-11-19 21:03:13,981 - Training on Fold 1 and using resnet34d
+2021-11-19 21:03:14,018 - 
+Time: 2021-11-19 21-03-14
+LR: 1e-05
+2021-11-19 21:06:48,189 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:06:48,317 - Model Summary:
+2021-11-19 21:06:49,953 - Training on Fold 1 and using resnet34d
+2021-11-19 21:06:49,987 - 
+Time: 2021-11-19 21-06-49
+LR: 1e-05
+2021-11-19 21:09:01,819 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:09:01,963 - Model Summary:
+2021-11-19 21:09:03,513 - Training on Fold 1 and using resnet34d
+2021-11-19 21:09:03,547 - 
+Time: 2021-11-19 21-09-03
+LR: 1e-05
+2021-11-19 21:09:08,595 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.541 | Time Elapsed: 00:00:05
+2021-11-19 21:10:10,371 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:10:10,502 - Model Summary:
+2021-11-19 21:10:11,938 - Training on Fold 1 and using resnet34d
+2021-11-19 21:10:11,971 - 
+Time: 2021-11-19 21-10-11
+LR: 1e-05
+2021-11-19 21:10:16,923 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.541 | Time Elapsed: 00:00:04
+2021-11-19 21:10:47,677 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:10:47,788 - Model Summary:
+2021-11-19 21:10:49,271 - Training on Fold 1 and using resnet34d
+2021-11-19 21:10:49,304 - 
+Time: 2021-11-19 21-10-49
+LR: 1e-05
+2021-11-19 21:10:54,465 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.541 | Time Elapsed: 00:00:05
+2021-11-19 21:11:36,022 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:11:36,150 - Model Summary:
+2021-11-19 21:11:37,718 - Training on Fold 1 and using resnet34d
+2021-11-19 21:11:37,756 - 
+Time: 2021-11-19 21-11-37
+LR: 1e-05
+2021-11-19 21:11:42,784 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.541 | Time Elapsed: 00:00:05
+2021-11-19 21:12:27,949 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:12:28,119 - Model Summary:
+2021-11-19 21:12:29,759 - Training on Fold 1 and using resnet34d
+2021-11-19 21:12:29,793 - 
+Time: 2021-11-19 21-12-29
+LR: 1e-05
+2021-11-19 21:12:35,058 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.541 | Time Elapsed: 00:00:05
+2021-11-19 21:12:37,356 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 1.529 | Time Elapsed: 00:00:02
+2021-11-19 21:13:06,269 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:13:06,393 - Model Summary:
+2021-11-19 21:13:07,932 - Training on Fold 1 and using resnet34d
+2021-11-19 21:13:07,967 - 
+Time: 2021-11-19 21-13-07
+LR: 1e-05
+2021-11-19 21:13:12,843 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.541 | Time Elapsed: 00:00:04
+2021-11-19 21:13:15,117 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 1.529 | Time Elapsed: 00:00:02
+2021-11-19 21:25:43,232 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:25:43,365 - Model Summary:
+2021-11-19 21:25:44,800 - Training on Fold 1 and using resnet34d
+2021-11-19 21:25:44,837 - 
+Time: 2021-11-19 21-25-44
+LR: 1e-05
+2021-11-19 21:25:49,720 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.541 | Time Elapsed: 00:00:04
+2021-11-19 21:26:49,650 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:26:49,769 - Model Summary:
+2021-11-19 21:26:51,317 - Training on Fold 1 and using resnet34d
+2021-11-19 21:26:51,349 - 
+Time: 2021-11-19 21-26-51
+LR: 1e-05
+2021-11-19 21:26:56,243 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.541 | Time Elapsed: 00:00:04
+2021-11-19 21:27:19,496 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:27:19,609 - Model Summary:
+2021-11-19 21:27:21,173 - Training on Fold 1 and using resnet34d
+2021-11-19 21:27:21,205 - 
+Time: 2021-11-19 21-27-21
+LR: 1e-05
+2021-11-19 21:27:26,154 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.541 | Time Elapsed: 00:00:04
+2021-11-19 21:27:56,573 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:27:56,694 - Model Summary:
+2021-11-19 21:27:58,177 - Training on Fold 1 and using resnet34d
+2021-11-19 21:27:58,210 - 
+Time: 2021-11-19 21-27-58
+LR: 1e-05
+2021-11-19 21:28:03,150 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.541 | Time Elapsed: 00:00:04
+2021-11-19 21:44:04,478 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:44:04,599 - Model Summary:
+2021-11-19 21:44:06,240 - Training on Fold 1 and using resnet34d
+2021-11-19 21:44:06,275 - 
+Time: 2021-11-19 21-44-06
+LR: 1e-05
+2021-11-19 21:44:11,458 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.541 | Time Elapsed: 00:00:05
+2021-11-19 21:44:54,873 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:44:54,991 - Model Summary:
+2021-11-19 21:44:56,478 - Training on Fold 1 and using resnet34d
+2021-11-19 21:44:56,512 - 
+Time: 2021-11-19 21-44-56
+LR: 1e-05
+2021-11-19 21:45:01,508 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.541 | Time Elapsed: 00:00:04
+2021-11-19 21:47:36,579 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:47:36,705 - Model Summary:
+2021-11-19 21:47:38,211 - Training on Fold 1 and using resnet34d
+2021-11-19 21:47:38,244 - 
+Time: 2021-11-19 21-47-38
+LR: 1e-05
+2021-11-19 21:47:43,205 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.541 | Time Elapsed: 00:00:04
+2021-11-19 21:48:32,020 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:48:32,132 - Model Summary:
+2021-11-19 21:48:33,674 - Training on Fold 1 and using resnet34d
+2021-11-19 21:48:33,707 - 
+Time: 2021-11-19 21-48-33
+LR: 1e-05
+2021-11-19 21:48:38,626 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.541 | Time Elapsed: 00:00:04
+2021-11-19 21:49:35,961 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:49:36,072 - Model Summary:
+2021-11-19 21:49:37,574 - Training on Fold 1 and using resnet34d
+2021-11-19 21:49:37,608 - 
+Time: 2021-11-19 21-49-37
+LR: 1e-05
+2021-11-19 21:49:42,722 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.541 | Time Elapsed: 00:00:05
+2021-11-19 21:50:20,413 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:50:20,530 - Model Summary:
+2021-11-19 21:50:22,022 - Training on Fold 1 and using resnet34d
+2021-11-19 21:50:22,056 - 
+Time: 2021-11-19 21-50-22
+LR: 1e-05
+2021-11-19 21:50:27,024 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.541 | Time Elapsed: 00:00:04
+2021-11-19 21:51:13,715 - Model: resnet34d 
+Pretrained: True 
+In Channels: 3
+2021-11-19 21:51:13,830 - Model Summary:
+2021-11-19 21:51:15,331 - Training on Fold 1 and using resnet34d
+2021-11-19 21:51:15,364 - 
+Time: 2021-11-19 21-51-15
+LR: 1e-05
+2021-11-19 21:51:20,377 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.541 | Time Elapsed: 00:00:05

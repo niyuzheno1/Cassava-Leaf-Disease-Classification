@@ -85,7 +85,7 @@ def train_one_fold(df_folds: pd.DataFrame, fold: int, is_plot: bool = False):
         # writer.add_image("name", image_grid)
 
     # Model, cost function and optimizer instancing
-    model = models.PetNeuralNet().to(device)
+    model = models.CustomNeuralNet().to(device)
     try:
         config.logger.info("Model Summary:")
         print(model)
@@ -163,7 +163,7 @@ if __name__ == "__main__":
     # )
 
     # # train_one_fold(df_folds=df_folds, fold=4)
-    # train_loop(df_folds=df_folds, is_plot=False)
+    train_loop(df_folds=df_folds, is_plot=False)
 
     # model_dir = Path(FILES.weight_path, MODEL.model_name).__str__()
     # model_dir = r"C:\Users\reighns\petfinder\model\weights\vit_small_patch16_224"

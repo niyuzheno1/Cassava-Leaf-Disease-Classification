@@ -6,7 +6,7 @@ import functools
 import torchsummary
 from src import utils
 
-model_params = global_params.ModelParams
+MODEL_PARAMS = global_params.ModelParams
 
 device = config.DEVICE
 
@@ -14,10 +14,10 @@ device = config.DEVICE
 class CustomNeuralNet(torch.nn.Module):
     def __init__(
         self,
-        model_name: str = model_params.model_name,
-        out_features: int = model_params.output_dimension,
-        in_channels: int = model_params.input_channels,
-        pretrained: bool = model_params.pretrained,
+        model_name: str = MODEL_PARAMS.model_name,
+        out_features: int = MODEL_PARAMS.output_dimension,
+        in_channels: int = MODEL_PARAMS.input_channels,
+        pretrained: bool = MODEL_PARAMS.pretrained,
     ):
         """[summary]
 

@@ -28,7 +28,7 @@ class CustomDataset(torch.utils.data.Dataset):
         self.image_ids = df[FOLDS.image_col_name].values
         self.df = df
         self.targets = (
-            torch.from_numpy(df[FOLDS.class_col_name].values).float()
+            torch.from_numpy(df[FOLDS.class_col_name].values).long()
             if mode != "test"
             else None
         )
@@ -44,6 +44,10 @@ class CustomDataset(torch.utils.data.Dataset):
         self, index: int
     ) -> Union[Dict[str, torch.FloatTensor], Dict[str, torch.FloatTensor]]:
         """Implements the getitem method: https://www.geeksforgeeks.org/__getitem__-and-__setitem__-in-python/
+
+        Be careful of Targets:
+            BCEWithLogitsLoss expects a target.float()
+            CrossEntropyLoss expects a target.long()
 
         Args:
             index (int): index of the dataset.
@@ -68,15 +72,16 @@ class CustomDataset(torch.utils.data.Dataset):
         if (self.mode == "train") or (self.mode == "valid"):
             return {
                 "X": torch.FloatTensor(image),
-                "y": torch.FloatTensor(target),
+                "y": torch.LongTensor(target),
             }
+
         elif self.mode == "test":
             return {"X": torch.FloatTensor(image)}
 
         elif self.mode == "gradcam":
             return {
                 "X": torch.FloatTensor(image),
-                "y": torch.FloatTensor(target),
+                "y": torch.LongTensor(target),
                 "original_image": torch.FloatTensor(original_image),
                 "image_id": self.image_ids[index],
             }
