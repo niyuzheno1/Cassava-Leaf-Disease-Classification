@@ -4,15 +4,22 @@ from sklearn.model_selection import GroupKFold, StratifiedKFold
 from config import global_params
 
 
-def make_folds(train_csv: pd.DataFrame, config: global_params.MakeFolds()) -> pd.DataFrame:
+def make_folds(
+    train_csv: pd.DataFrame, config: global_params.MakeFolds()
+) -> pd.DataFrame:
     """Split the given dataframe into training folds."""
     # TODO: add options for cv_scheme as it is cumbersome here.
     if config.cv_schema == "StratifiedKFold":
         df_folds = train_csv.copy()
-        skf = StratifiedKFold(n_splits=config.num_folds, shuffle=True, random_state=config.seed)
+        skf = StratifiedKFold(
+            n_splits=config.num_folds, shuffle=True, random_state=config.seed
+        )
 
-        for fold, (train_idx, val_idx) in enumerate(
-            skf.split(X=df_folds[config.image_col_name], y=df_folds[config.class_col_name])
+        for fold, (_train_idx, val_idx) in enumerate(
+            skf.split(
+                X=df_folds[config.image_col_name],
+                y=df_folds[config.class_col_name],
+            )
         ):
             df_folds.loc[val_idx, "fold"] = int(fold + 1)
         df_folds["fold"] = df_folds["fold"].astype(int)
@@ -23,7 +30,9 @@ def make_folds(train_csv: pd.DataFrame, config: global_params.MakeFolds()) -> pd
         gkf = GroupKFold(n_splits=config.num_folds)
         groups = df_folds[config.group_kfold_split].values
         for fold, (train_index, val_index) in enumerate(
-            gkf.split(X=df_folds, y=df_folds[config.class_col_name], groups=groups)
+            gkf.split(
+                X=df_folds, y=df_folds[config.class_col_name], groups=groups
+            )
         ):
             df_folds.loc[val_index, "fold"] = int(fold + 1)
         df_folds["fold"] = df_folds["fold"].astype(int)

@@ -5,7 +5,9 @@ import sys
 
 from pathlib import Path
 
-BASE_DIR = Path(__file__).parent.parent.absolute().__str__()  # C:\Users\reigHns\mnist
+BASE_DIR = (
+    Path(__file__).parent.parent.absolute().__str__()
+)  # C:\Users\reigHns\mnist
 sys.path.append(BASE_DIR)
 
 
@@ -19,7 +21,17 @@ import torch
 import typer
 from sklearn import metrics
 
-from src import plot, prepare, transformation, utils, models, train, inference, trainer
+from src import (
+    plot,
+    prepare,
+    transformation,
+    utils,
+    models,
+    train,
+    inference,
+    trainer,
+    dataset,
+)
 from config import config, global_params
 from torch._C import device
 from torch.autograd import Variable
@@ -32,8 +44,8 @@ import torchsummary
 FILES = global_params.FilePaths()
 FOLDS = global_params.MakeFolds()
 MODEL = global_params.ModelParams()
-loader_params = global_params.DataLoaderParams()
-train_params = global_params.GlobalTrainParams()
+LOADER_PARAMS = global_params.DataLoaderParams()
+TRAIN_PARAMS = global_params.GlobalTrainParams()
 
 
 device = config.DEVICE
@@ -83,19 +95,27 @@ def train_one_fold(df_folds: pd.DataFrame, fold: int, is_plot: bool = False):
 
     optimizer = torch.optim.AdamW(
         model.parameters(),
-        lr=train_params.init_lr,
-        weight_decay=train_params.weight_decay,
+        lr=TRAIN_PARAMS.init_lr,
+        weight_decay=TRAIN_PARAMS.weight_decay,
         amsgrad=False,
     )
     scheduler = train.get_scheduler(optimizer)
     reighns_trainer: trainer.Trainer = trainer.Trainer(
-        params=train_params, model=model, device=device, optimizer=optimizer, scheduler=scheduler
+        params=TRAIN_PARAMS,
+        model=model,
+        device=device,
+        optimizer=optimizer,
+        scheduler=scheduler,
     )
 
-    curr_fold_best_checkpoint = reighns_trainer.fit(train_loader, valid_loader, fold)
+    curr_fold_best_checkpoint = reighns_trainer.fit(
+        train_loader, valid_loader, fold
+    )
 
     # TODO: Note that for sigmoid on one class, the OOF score is the positive class.
-    df_oof[[str(c) + "_oof" for c in range(train_params.num_classes)]] = curr_fold_best_checkpoint["oof_preds"]
+    df_oof[
+        [str(c) + "_oof" for c in range(TRAIN_PARAMS.num_classes)]
+    ] = curr_fold_best_checkpoint["oof_preds"]
     df_oof["oof_trues"] = curr_fold_best_checkpoint["oof_trues"]
     # df_oof['error_analysis'] = todo - sort the dataframe by the ones that the model got wrong to see where they are focusing.
     # df_oof["oof_preds"] = curr_fold_best_checkpoint["oof_preds"].argmax(1)
@@ -133,41 +153,17 @@ def train_loop(df_folds: pd.DataFrame, is_plot: bool = False):
     df_oof.to_csv(Path(FILES.oof_csv, "oof.csv"), index=False)
 
 
-def forward_check():
-    """Forward Pass Check."""
-    utils.seed_all()
-    model = models.PetNeuralNet().to(device)
-    _ = models.forward_pass(estimator=model)
-    summary = models.torchsummary_wrapper(model, (3, 224, 224))
-    print(summary)
-
-
 if __name__ == "__main__":
     utils.seed_all()
+
+    # @Step 1: Download and load data.
     df_train, df_test, df_folds, sub = prepare.prepare_data()
-
-    # train_dataset = dataset.PawpularityDataset(
-    #     df=df_folds, transforms=transformation.get_train_transforms(), mode="train"
-    # )
-    # train_loader = torch.utils.data.DataLoader(
-    #     train_dataset,
-    #     # sampler=RandomSampler(dataset_train),
-    #     **loader_params.train_loader,
-    #     worker_init_fn=utils.seed_worker,
+    # forward_X, forward_y, model_summary = models.forward_pass(
+    #     model=models.CustomNeuralNet()
     # )
 
-    # plot.show_image(
-    #     train_dataset=train_dataset,
-    #     nrows=1,
-    #     ncols=1,
-    #     mean=[0.485, 0.456, 0.406],
-    #     std=[0.229, 0.224, 0.225],
-    # )
-
-    # # normalize to 0 and 1 to be able to use BCEWithLogitsLoss
-    df_folds["Pawpularity"] = df_folds["Pawpularity"] / 100
-    # train_one_fold(df_folds=df_folds, fold=4)
-    train_loop(df_folds=df_folds, is_plot=False)
+    # # train_one_fold(df_folds=df_folds, fold=4)
+    # train_loop(df_folds=df_folds, is_plot=False)
 
     # model_dir = Path(FILES.weight_path, MODEL.model_name).__str__()
     # model_dir = r"C:\Users\reighns\petfinder\model\weights\vit_small_patch16_224"

@@ -4,13 +4,14 @@ from config import global_params, config
 from typing import Dict, Callable, Tuple, Union
 import functools
 import torchsummary
+from src import utils
 
 model_params = global_params.ModelParams
 
 device = config.DEVICE
 
 
-class PetNeuralNet(torch.nn.Module):
+class CustomNeuralNet(torch.nn.Module):
     def __init__(
         self,
         model_name: str = model_params.model_name,
@@ -28,10 +29,16 @@ class PetNeuralNet(torch.nn.Module):
         """
         super().__init__()
 
-        self.backbone = timm.create_model(model_name, pretrained=pretrained, in_chans=in_channels)
-        config.logger.info(f"Model: {model_name} \nPretrained: {pretrained} \nIn Channels: {in_channels}")
+        self.backbone = timm.create_model(
+            model_name, pretrained=pretrained, in_chans=in_channels
+        )
+        config.logger.info(
+            f"Model: {model_name} \nPretrained: {pretrained} \nIn Channels: {in_channels}"
+        )
 
-        self.backbone.reset_classifier(num_classes=0, global_pool="avg")  # removes head from backbone
+        self.backbone.reset_classifier(
+            num_classes=0, global_pool="avg"
+        )  # removes head from backbone
 
         self.in_features = self.backbone.num_features
 
@@ -78,43 +85,57 @@ class PetNeuralNet(torch.nn.Module):
             last_layer_name = name
 
         last_layer_attributes = last_layer_name.split(".")  # + ['in_features']
-        linear_layer = functools.reduce(getattr, last_layer_attributes, self.model)
+        linear_layer = functools.reduce(
+            getattr, last_layer_attributes, self.model
+        )
         # reduce applies to a list recursively and reduce
-        in_features = functools.reduce(getattr, last_layer_attributes, self.model).in_features
+        in_features = functools.reduce(
+            getattr, last_layer_attributes, self.model
+        ).in_features
         return last_layer_attributes, in_features, linear_layer
 
 
 # see pytorch model summary using torchsummary
-def torchsummary_wrapper(estimator: Callable, image_size: Tuple[int, int, int]):
+def torchsummary_wrapper(
+    model: CustomNeuralNet, image_size: Tuple[int, int, int]
+) -> torchsummary.model_statistics.ModelStatistics:
     """A torch wrapper to print out layers of a Model.
 
     Args:
-        estimator (Callable): [description]
-        image_size (Tuple[int, int, int]): [description]
+        model (CustomNeuralNet): Model.
+        image_size (Tuple[int, int, int]): Image size as a tuple of (channels, height, width).
 
     Returns:
-        [type]: [description]
+        model_summary (torchsummary.model_statistics.ModelStatistics): Model summary.
     """
 
-    model_summary = torchsummary.summary(estimator, image_size)
+    model_summary = torchsummary.summary(model, image_size)
     return model_summary
 
 
-def forward_pass(estimator: Callable) -> Union[torch.FloatTensor, torch.LongTensor]:
+def forward_pass(
+    model: CustomNeuralNet,
+) -> Union[
+    torch.FloatTensor,
+    torch.LongTensor,
+    torchsummary.model_statistics.ModelStatistics,
+]:
     """Performs a forward pass of a tensor through the model.
 
     Args:
-        image (torch.FloatTensor): [description]
-        estimator (Callable): [description]
+        model (CustomNeuralNet): Model to be used for the forward pass.
 
     Returns:
-        [type]: [description]
+        X, y, summary (Union[torch.FloatTensor, torch.LongTensor, torchsummary.model_statistics.ModelStatistics]): Returns the X, y, and summary of the model.
     """
+    utils.seed_all()
+    model.to(device)
     batch_size = 4
     image_size = (3, 224, 224)
     X = torch.randn((batch_size, *image_size)).to(device)
-    y = estimator(image=X)
-
-    config.logging.info(f"x: {X.shape} \ny: {y.shape}")
-    config.logging.info(f"x[0][0][0]: {X[0][0][0][0]} \ny[0][0][0]: {y[0][0]}")
-    return X, y
+    y = model(image=X)
+    config.logger.info("Forward Pass Successful!")
+    config.logger.info(f"x: {X.shape} \ny: {y.shape}")
+    config.logger.info(f"x[0][0][0]: {X[0][0][0][0]} \ny[0][0][0]: {y[0][0]}")
+    summary = torchsummary_wrapper(model, image_size)
+    return X, y, summary

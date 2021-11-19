@@ -6,7 +6,9 @@ from typing import List
 import torchvision
 
 
-def unnormalize(normalized_img, mean, std, max_pixel_value=255.0) -> torch.Tensor:
+def unnormalize(
+    normalized_img, mean, std, max_pixel_value=255.0
+) -> torch.Tensor:
     """TODO: Use https://discuss.pytorch.org/t/simple-way-to-inverse-transform-normalization/4821/7 code and make it a class to include both Normalize and Unnormalize Method.
 
     Args:
@@ -22,15 +24,24 @@ def unnormalize(normalized_img, mean, std, max_pixel_value=255.0) -> torch.Tenso
     # unnormalized_img = normalized_img * (std * max_pixel_values) + mean * max_pixel_values
 
     unnormalized = torch.zeros(normalized_img.size(), dtype=torch.float64)
-    unnormalized[0, :, :] = normalized_img[0, :, :] * (std[0] * max_pixel_value) + mean[0] * max_pixel_value
-    unnormalized[1, :, :] = normalized_img[1, :, :] * (std[1] * max_pixel_value) + mean[1] * max_pixel_value
-    unnormalized[2, :, :] = normalized_img[2, :, :] * (std[2] * max_pixel_value) + mean[2] * max_pixel_value
+    unnormalized[0, :, :] = (
+        normalized_img[0, :, :] * (std[0] * max_pixel_value)
+        + mean[0] * max_pixel_value
+    )
+    unnormalized[1, :, :] = (
+        normalized_img[1, :, :] * (std[1] * max_pixel_value)
+        + mean[1] * max_pixel_value
+    )
+    unnormalized[2, :, :] = (
+        normalized_img[2, :, :] * (std[2] * max_pixel_value)
+        + mean[2] * max_pixel_value
+    )
 
     return unnormalized
 
 
 def show_image(
-    loader: torch.utils.data.Dataset,
+    loader: torch.utils.data.DataLoader,
     nrows: int = 3,
     ncols: int = 4,
     mean: List[float] = [0.485, 0.456, 0.406],
@@ -49,7 +60,10 @@ def show_image(
 
     dataiter = iter(loader)
 
-    one_batch_images, one_batch_targets = dataiter.next()["X"], dataiter.next()["y"]
+    one_batch_images, one_batch_targets = (
+        dataiter.next()["X"],
+        dataiter.next()["y"],
+    )
     # TODO: FIX UNNORMALIZE not showing properly.
     # one_batch_images = [unnormalize(image, mean, std, max_pixel_value=255.0) for image in one_batch_images]
 
