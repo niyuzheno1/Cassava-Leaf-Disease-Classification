@@ -65,7 +65,7 @@ def prepare_loaders(
     df_folds: pd.DataFrame, fold: int
 ) -> Union[torch.utils.data.DataLoader, torch.utils.data.DataLoader]:
     """Prepare Data Loaders."""
-    debug_multiplier = 32
+    debug_multiplier = 2
 
     if TRAIN_PARAMS.debug:
         df_train = df_folds[df_folds["fold"] != fold].sample(

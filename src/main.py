@@ -151,9 +151,9 @@ if __name__ == "__main__":
 
     # @Step 1: Download and load data.
     df_train, df_test, df_folds, sub = prepare.prepare_data()
-    # forward_X, forward_y, model_summary = models.forward_pass(
-    #     model=models.CustomNeuralNet()
-    # )
+
+    # @Step X: Forward Sanity Check
+    # forward_X, forward_y = models.forward_pass(model=models.CustomNeuralNet())
 
     # # train_one_fold(df_folds=df_folds, fold=4)
     train_loop(df_folds=df_folds, is_plot=False)

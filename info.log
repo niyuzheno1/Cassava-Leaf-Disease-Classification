@@ -1413,3 +1413,302 @@ LR: 0.001
 2021-11-20 17:38:48,918 - Using y_prob to calculate tp, fp, tn, fn.
 2021-11-20 17:38:48,928 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 0.939 | Avg Val Accuracy: 0.680 | Avg Val Macro AUROC: 0.850 | Time Elapsed: 00:00:11
 2021-11-20 17:38:49,039 - Saving model with best valid AUROC score: 0.849835216999054
+2021-11-20 17:43:30,200 - Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 17:43:30,301 - Model Summary:
+2021-11-20 17:43:31,794 - Forward Pass Successful!
+2021-11-20 17:43:31,794 - x: torch.Size([4, 3, 224, 224]) 
+y: torch.Size([4, 5])
+2021-11-20 17:43:31,794 - x[0][0][0]: -0.9357500672340393 
+y[0][0][0]: 0.019944850355386734
+2021-11-20 17:43:59,187 - Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 17:43:59,299 - Model Summary:
+2021-11-20 17:44:00,867 - Forward Pass Successful!
+2021-11-20 17:44:00,867 - x: torch.Size([4, 3, 224, 224]) 
+y: torch.Size([4, 5])
+2021-11-20 17:44:00,868 - x[0][0][0]: -0.9357500672340393 
+y[0][0][0]: 0.019944850355386734
+2021-11-20 17:50:57,064 - Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 17:50:57,171 - Training on Fold 1 and using tf_efficientnet_b0_ns
+2021-11-20 17:50:57,211 - 
+Time: 2021-11-20 17-50-57
+LR: 0.001
+2021-11-20 17:51:13,402 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 0.975 | Time Elapsed: 00:00:16
+2021-11-20 17:51:22,369 - Using y_prob to calculate tp, fp, tn, fn.
+2021-11-20 17:51:22,377 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 0.726 | Avg Val Accuracy: 0.739 | Avg Val Macro AUROC: 0.891 | Time Elapsed: 00:00:08
+2021-11-20 17:51:22,484 - Saving model with best valid AUROC score: 0.891186535358429
+2021-11-20 17:51:23,251 - Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 17:51:23,271 - Training on Fold 2 and using tf_efficientnet_b0_ns
+2021-11-20 17:51:23,271 - 
+Time: 2021-11-20 17-51-23
+LR: 0.001
+2021-11-20 17:51:37,684 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 0.981 | Time Elapsed: 00:00:14
+2021-11-20 17:51:46,837 - Using y_prob to calculate tp, fp, tn, fn.
+2021-11-20 17:51:46,846 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 0.710 | Avg Val Accuracy: 0.744 | Avg Val Macro AUROC: 0.903 | Time Elapsed: 00:00:09
+2021-11-20 17:51:46,956 - Saving model with best valid AUROC score: 0.902660071849823
+2021-11-20 17:51:47,769 - Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 17:51:47,789 - Training on Fold 3 and using tf_efficientnet_b0_ns
+2021-11-20 17:51:47,789 - 
+Time: 2021-11-20 17-51-47
+LR: 0.001
+2021-11-20 17:52:31,488 - Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 17:52:31,619 - Training on Fold 1 and using tf_efficientnet_b0_ns
+2021-11-20 17:52:31,659 - 
+Time: 2021-11-20 17-52-31
+LR: 0.001
+2021-11-20 17:52:34,289 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.575 | Time Elapsed: 00:00:02
+2021-11-20 17:52:34,858 - Using y_prob to calculate tp, fp, tn, fn.
+2021-11-20 17:52:34,865 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 1.521 | Avg Val Accuracy: 0.469 | Avg Val Macro AUROC: 0.483 | Time Elapsed: 00:00:00
+2021-11-20 17:52:34,963 - Saving model with best valid AUROC score: 0.4833999574184418
+2021-11-20 17:52:34,995 - 
+Time: 2021-11-20 17-52-34
+LR: 0.0009755527298894294
+2021-11-20 17:52:35,909 - [RESULT]: Train. Epoch 2 | Avg Train Summary Loss: 1.301 | Time Elapsed: 00:00:00
+2021-11-20 17:52:36,455 - Using y_prob to calculate tp, fp, tn, fn.
+2021-11-20 17:52:36,462 - [RESULT]: Validation. Epoch 2 | Avg Val Summary Loss: 1.340 | Avg Val Accuracy: 0.625 | Avg Val Macro AUROC: 0.603 | Time Elapsed: 00:00:00
+2021-11-20 17:52:36,564 - Saving model with best valid AUROC score: 0.6025637984275818
+2021-11-20 17:52:36,597 - 
+Time: 2021-11-20 17-52-36
+LR: 0.0009046039886902864
+2021-11-20 17:52:37,503 - [RESULT]: Train. Epoch 3 | Avg Train Summary Loss: 0.989 | Time Elapsed: 00:00:00
+2021-11-20 17:52:38,057 - Using y_prob to calculate tp, fp, tn, fn.
+2021-11-20 17:52:38,066 - [RESULT]: Validation. Epoch 3 | Avg Val Summary Loss: 1.133 | Avg Val Accuracy: 0.625 | Avg Val Macro AUROC: 0.677 | Time Elapsed: 00:00:00
+2021-11-20 17:52:38,176 - Saving model with best valid AUROC score: 0.6769049167633057
+2021-11-20 17:52:38,407 - Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 17:52:38,431 - Training on Fold 2 and using tf_efficientnet_b0_ns
+2021-11-20 17:52:38,432 - 
+Time: 2021-11-20 17-52-38
+LR: 0.001
+2021-11-20 17:53:49,307 - Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 17:53:49,416 - Training on Fold 1 and using tf_efficientnet_b0_ns
+
+2021-11-20 17:53:49,453 - 
+Time: 2021-11-20 17-53-49
+LR: 0.001
+2021-11-20 17:53:52,050 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.575 | Time Elapsed: 00:00:02
+2021-11-20 17:53:52,666 - Using y_prob to calculate tp, fp, tn, fn.
+2021-11-20 17:53:52,674 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 1.521 | Avg Val Accuracy: 0.469 | Avg Val Macro AUROC: 0.483 | Time Elapsed: 00:00:00
+2021-11-20 17:53:52,784 - Saving model with best valid AUROC score: 0.4833999574184418
+2021-11-20 17:53:52,825 - 
+Time: 2021-11-20 17-53-52
+LR: 0.0009755527298894294
+2021-11-20 17:53:53,752 - [RESULT]: Train. Epoch 2 | Avg Train Summary Loss: 1.301 | Time Elapsed: 00:00:00
+2021-11-20 17:53:54,320 - Using y_prob to calculate tp, fp, tn, fn.
+2021-11-20 17:53:54,327 - [RESULT]: Validation. Epoch 2 | Avg Val Summary Loss: 1.340 | Avg Val Accuracy: 0.625 | Avg Val Macro AUROC: 0.603 | Time Elapsed: 00:00:00
+2021-11-20 17:54:56,725 - Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 17:54:56,856 - Training on Fold 1 and using tf_efficientnet_b0_ns
+
+2021-11-20 17:54:56,856 - Current learning rate: 0.001
+
+2021-11-20 17:54:59,379 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.575 | Time Elapsed: 00:00:02
+2021-11-20 17:54:59,978 - Using y_prob to calculate tp, fp, tn, fn.
+2021-11-20 17:54:59,988 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 1.521 | Avg Val Accuracy: 0.469 | Avg Val Macro AUROC: 0.483 | Time Elapsed: 00:00:00
+2021-11-20 17:55:00,097 - Saving model with best valid AUROC score: 0.4833999574184418
+2021-11-20 17:55:00,138 - Current learning rate: 0.0009755527298894294
+
+2021-11-20 17:55:01,099 - [RESULT]: Train. Epoch 2 | Avg Train Summary Loss: 1.301 | Time Elapsed: 00:00:00
+2021-11-20 17:55:01,674 - Using y_prob to calculate tp, fp, tn, fn.
+2021-11-20 17:55:01,680 - [RESULT]: Validation. Epoch 2 | Avg Val Summary Loss: 1.340 | Avg Val Accuracy: 0.625 | Avg Val Macro AUROC: 0.603 | Time Elapsed: 00:00:00
+2021-11-20 17:55:01,785 - Saving model with best valid AUROC score: 0.6025637984275818
+2021-11-20 17:55:01,822 - Current learning rate: 0.0009046039886902864
+
+2021-11-20 17:55:02,745 - [RESULT]: Train. Epoch 3 | Avg Train Summary Loss: 0.989 | Time Elapsed: 00:00:00
+2021-11-20 18:12:39,715 - Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 18:12:39,829 - Training on Fold 1 and using tf_efficientnet_b0_ns
+
+2021-11-20 18:12:39,830 - Current learning rate: 0.001
+
+2021-11-20 18:12:42,455 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.575 | Learning Rate: 0.00100 | Time Elapsed: 00:00:02
+
+2021-11-20 18:12:43,118 - Using y_prob to calculate tp, fp, tn, fn.
+2021-11-20 18:12:43,126 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 1.521 | Avg Val Accuracy: 0.469 | Avg Val Macro AUROC: 0.483 | Time Elapsed: 00:00:00
+2021-11-20 18:12:43,231 - Saving model with best valid AUROC score: 0.4833999574184418
+2021-11-20 18:12:43,269 - Current learning rate: 0.0009755527298894294
+
+2021-11-20 18:12:44,221 - [RESULT]: Train. Epoch 2 | Avg Train Summary Loss: 1.301 | Learning Rate: 0.00098 | Time Elapsed: 00:00:00
+
+2021-11-20 18:12:44,782 - Using y_prob to calculate tp, fp, tn, fn.
+2021-11-20 18:12:44,790 - [RESULT]: Validation. Epoch 2 | Avg Val Summary Loss: 1.340 | Avg Val Accuracy: 0.625 | Avg Val Macro AUROC: 0.603 | Time Elapsed: 00:00:00
+2021-11-20 18:12:44,890 - Saving model with best valid AUROC score: 0.6025637984275818
+2021-11-20 18:12:44,927 - Current learning rate: 0.0009046039886902864
+
+2021-11-20 18:12:45,870 - [RESULT]: Train. Epoch 3 | Avg Train Summary Loss: 0.989 | Learning Rate: 0.00090 | Time Elapsed: 00:00:00
+
+2021-11-20 18:12:46,461 - Using y_prob to calculate tp, fp, tn, fn.
+2021-11-20 18:12:46,468 - [RESULT]: Validation. Epoch 3 | Avg Val Summary Loss: 1.133 | Avg Val Accuracy: 0.625 | Avg Val Macro AUROC: 0.677 | Time Elapsed: 00:00:00
+2021-11-20 18:12:46,574 - Saving model with best valid AUROC score: 0.6769049167633057
+2021-11-20 18:12:46,877 - Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 18:12:46,898 - Training on Fold 2 and using tf_efficientnet_b0_ns
+
+2021-11-20 18:12:46,898 - Current learning rate: 0.001
+
+2021-11-20 18:12:47,902 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.571 | Learning Rate: 0.00100 | Time Elapsed: 00:00:01
+
+2021-11-20 18:12:48,471 - Using y_prob to calculate tp, fp, tn, fn.
+2021-11-20 18:12:48,477 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 1.509 | Avg Val Accuracy: 0.531 | Avg Val Macro AUROC: 0.585 | Time Elapsed: 00:00:00
+2021-11-20 18:12:48,576 - Saving model with best valid AUROC score: 0.5850589275360107
+2021-11-20 18:12:48,607 - Current learning rate: 0.0009755527298894294
+
+2021-11-20 18:12:49,526 - [RESULT]: Train. Epoch 2 | Avg Train Summary Loss: 1.208 | Learning Rate: 0.00098 | Time Elapsed: 00:00:00
+
+2021-11-20 18:13:13,591 - Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 18:13:13,704 - Training on Fold 1 and using tf_efficientnet_b0_ns
+
+2021-11-20 18:13:16,256 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.575 | Learning Rate: 0.00100 | Time Elapsed: 00:00:02
+
+2021-11-20 18:13:16,841 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 1.521 | Avg Val Accuracy: 0.469 | Avg Val Macro AUROC: 0.483 | Time Elapsed: 00:00:00
+2021-11-20 18:13:16,949 - Saving model with best valid AUROC score: 0.4833999574184418
+2021-11-20 18:13:17,898 - [RESULT]: Train. Epoch 2 | Avg Train Summary Loss: 1.301 | Learning Rate: 0.00098 | Time Elapsed: 00:00:00
+
+2021-11-20 18:13:18,478 - [RESULT]: Validation. Epoch 2 | Avg Val Summary Loss: 1.340 | Avg Val Accuracy: 0.625 | Avg Val Macro AUROC: 0.603 | Time Elapsed: 00:00:00
+2021-11-20 18:13:18,580 - Saving model with best valid AUROC score: 0.6025637984275818
+2021-11-20 18:13:19,519 - [RESULT]: Train. Epoch 3 | Avg Train Summary Loss: 0.989 | Learning Rate: 0.00090 | Time Elapsed: 00:00:00
+
+2021-11-20 18:13:20,084 - [RESULT]: Validation. Epoch 3 | Avg Val Summary Loss: 1.133 | Avg Val Accuracy: 0.625 | Avg Val Macro AUROC: 0.677 | Time Elapsed: 00:00:00
+2021-11-20 18:13:20,183 - Saving model with best valid AUROC score: 0.6769049167633057
+2021-11-20 18:13:20,423 - Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 18:13:20,441 - Training on Fold 2 and using tf_efficientnet_b0_ns
+
+2021-11-20 18:13:21,388 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.571 | Learning Rate: 0.00100 | Time Elapsed: 00:00:00
+
+2021-11-20 18:13:21,936 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 1.509 | Avg Val Accuracy: 0.531 | Avg Val Macro AUROC: 0.585 | Time Elapsed: 00:00:00
+2021-11-20 18:13:22,039 - Saving model with best valid AUROC score: 0.5850589275360107
+2021-11-20 18:13:22,984 - [RESULT]: Train. Epoch 2 | Avg Train Summary Loss: 1.208 | Learning Rate: 0.00098 | Time Elapsed: 00:00:00
+
+2021-11-20 18:13:23,555 - [RESULT]: Validation. Epoch 2 | Avg Val Summary Loss: 1.291 | Avg Val Accuracy: 0.594 | Avg Val Macro AUROC: 0.749 | Time Elapsed: 00:00:00
+2021-11-20 18:13:23,658 - Saving model with best valid AUROC score: 0.748875081539154
+2021-11-20 18:13:24,607 - [RESULT]: Train. Epoch 3 | Avg Train Summary Loss: 0.888 | Learning Rate: 0.00090 | Time Elapsed: 00:00:00
+
+2021-11-20 18:13:25,150 - [RESULT]: Validation. Epoch 3 | Avg Val Summary Loss: 1.041 | Avg Val Accuracy: 0.625 | Avg Val Macro AUROC: 0.786 | Time Elapsed: 00:00:00
+2021-11-20 18:13:25,253 - Saving model with best valid AUROC score: 0.7856194376945496
+2021-11-20 18:13:25,489 - Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 18:13:25,511 - Training on Fold 3 and using tf_efficientnet_b0_ns
+
+2021-11-20 18:13:26,477 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.600 | Learning Rate: 0.00100 | Time Elapsed: 00:00:00
+
+2021-11-20 18:13:27,047 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 1.523 | Avg Val Accuracy: 0.516 | Avg Val Macro AUROC: 0.589 | Time Elapsed: 00:00:00
+2021-11-20 18:13:27,145 - Saving model with best valid AUROC score: 0.588752806186676
+2021-11-20 18:13:28,084 - [RESULT]: Train. Epoch 2 | Avg Train Summary Loss: 1.311 | Learning Rate: 0.00098 | Time Elapsed: 00:00:00
+
+2021-11-20 18:13:28,646 - [RESULT]: Validation. Epoch 2 | Avg Val Summary Loss: 1.409 | Avg Val Accuracy: 0.609 | Avg Val Macro AUROC: 0.718 | Time Elapsed: 00:00:00
+2021-11-20 18:13:28,747 - Saving model with best valid AUROC score: 0.7178811430931091
+2021-11-20 18:13:29,683 - [RESULT]: Train. Epoch 3 | Avg Train Summary Loss: 1.058 | Learning Rate: 0.00090 | Time Elapsed: 00:00:00
+
+2021-11-20 18:13:30,240 - [RESULT]: Validation. Epoch 3 | Avg Val Summary Loss: 1.237 | Avg Val Accuracy: 0.672 | Avg Val Macro AUROC: 0.822 | Time Elapsed: 00:00:00
+2021-11-20 18:13:30,340 - Saving model with best valid AUROC score: 0.8219221830368042
+2021-11-20 18:13:30,587 - Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 18:13:30,606 - Training on Fold 4 and using tf_efficientnet_b0_ns
+
+2021-11-20 18:13:31,566 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.586 | Learning Rate: 0.00100 | Time Elapsed: 00:00:00
+
+2021-11-20 18:13:32,141 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 1.531 | Avg Val Accuracy: 0.391 | Avg Val Macro AUROC: 0.546 | Time Elapsed: 00:00:00
+2021-11-20 18:13:32,244 - Saving model with best valid AUROC score: 0.5462878942489624
+2021-11-20 18:14:36,186 - 
+Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 18:14:36,310 - Training on Fold 1 and using tf_efficientnet_b0_ns
+
+2021-11-20 18:14:38,830 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.575 | Learning Rate: 0.00100 | Time Elapsed: 00:00:02
+
+2021-11-20 18:14:39,388 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 1.521 | Avg Val Accuracy: 0.469 | Avg Val Macro AUROC: 0.483 | Time Elapsed: 00:00:00
+2021-11-20 18:14:39,488 - Saving model with best valid AUROC score: 0.4833999574184418
+2021-11-20 18:14:40,437 - [RESULT]: Train. Epoch 2 | Avg Train Summary Loss: 1.301 | Learning Rate: 0.00098 | Time Elapsed: 00:00:00
+
+2021-11-20 18:15:33,910 - 
+Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 18:15:34,010 - Training on Fold 1 and using tf_efficientnet_b0_ns
+
+2021-11-20 18:15:36,574 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.575 | Learning Rate: 0.00100 | Time Elapsed: 00:00:02
+
+2021-11-20 18:15:37,181 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 1.521 | Avg Val Accuracy: 0.469 | Avg Val Macro AUROC: 0.483 | Time Elapsed: 00:00:00
+
+2021-11-20 18:15:37,296 - Saving model with best valid AUROC score: 0.4833999574184418
+2021-11-20 18:15:38,263 - [RESULT]: Train. Epoch 2 | Avg Train Summary Loss: 1.301 | Learning Rate: 0.00098 | Time Elapsed: 00:00:00
+
+2021-11-20 18:15:38,821 - [RESULT]: Validation. Epoch 2 | Avg Val Summary Loss: 1.340 | Avg Val Accuracy: 0.625 | Avg Val Macro AUROC: 0.603 | Time Elapsed: 00:00:00
+
+2021-11-20 18:15:38,923 - Saving model with best valid AUROC score: 0.6025637984275818
+2021-11-20 18:15:39,874 - [RESULT]: Train. Epoch 3 | Avg Train Summary Loss: 0.989 | Learning Rate: 0.00090 | Time Elapsed: 00:00:00
+
+2021-11-20 18:15:40,449 - [RESULT]: Validation. Epoch 3 | Avg Val Summary Loss: 1.133 | Avg Val Accuracy: 0.625 | Avg Val Macro AUROC: 0.677 | Time Elapsed: 00:00:00
+
+2021-11-20 18:15:40,556 - Saving model with best valid AUROC score: 0.6769049167633057
+2021-11-20 18:15:40,791 - 
+Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 18:15:40,809 - Training on Fold 2 and using tf_efficientnet_b0_ns
+
+2021-11-20 18:16:22,041 - 
+Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 18:16:22,155 - Training on Fold 1 and using tf_efficientnet_b0_ns
+
+2021-11-20 18:16:24,608 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.575 | Learning Rate: 0.00100 | Time Elapsed: 00:00:02
+
+2021-11-20 18:16:25,167 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 1.521 | Avg Val Accuracy: 0.469 | Avg Val Macro AUROC: 0.483 | Time Elapsed: 00:00:00
+
+2021-11-20 18:16:25,264 - 
+Saving model with best valid AUROC score: 0.4833999574184418
+2021-11-20 18:16:26,237 - [RESULT]: Train. Epoch 2 | Avg Train Summary Loss: 1.301 | Learning Rate: 0.00098 | Time Elapsed: 00:00:00
+
+2021-11-20 18:16:26,796 - [RESULT]: Validation. Epoch 2 | Avg Val Summary Loss: 1.340 | Avg Val Accuracy: 0.625 | Avg Val Macro AUROC: 0.603 | Time Elapsed: 00:00:00
+
+2021-11-20 18:16:26,898 - 
+Saving model with best valid AUROC score: 0.6025637984275818
+2021-11-20 18:16:27,836 - [RESULT]: Train. Epoch 3 | Avg Train Summary Loss: 0.989 | Learning Rate: 0.00090 | Time Elapsed: 00:00:00
+
+2021-11-20 18:16:28,409 - [RESULT]: Validation. Epoch 3 | Avg Val Summary Loss: 1.133 | Avg Val Accuracy: 0.625 | Avg Val Macro AUROC: 0.677 | Time Elapsed: 00:00:00
+
+2021-11-20 18:17:12,905 - 
+Model: tf_efficientnet_b0_ns 
+Pretrained: True 
+In Channels: 3
+2021-11-20 18:17:13,009 - 
+Training on Fold 1 and using tf_efficientnet_b0_ns
+
+2021-11-20 18:17:15,563 - [RESULT]: Train. Epoch 1 | Avg Train Summary Loss: 1.575 | Learning Rate: 0.00100 | Time Elapsed: 00:00:02
+
+2021-11-20 18:17:16,154 - [RESULT]: Validation. Epoch 1 | Avg Val Summary Loss: 1.521 | Avg Val Accuracy: 0.469 | Avg Val Macro AUROC: 0.483 | Time Elapsed: 00:00:00
+
+2021-11-20 18:17:16,259 - 
+Saving model with best valid AUROC score: 0.4833999574184418
+2021-11-20 18:17:17,229 - [RESULT]: Train. Epoch 2 | Avg Train Summary Loss: 1.301 | Learning Rate: 0.00098 | Time Elapsed: 00:00:00
+
+2021-11-20 18:17:17,791 - [RESULT]: Validation. Epoch 2 | Avg Val Summary Loss: 1.340 | Avg Val Accuracy: 0.625 | Avg Val Macro AUROC: 0.603 | Time Elapsed: 00:00:00
+
+2021-11-20 18:17:17,889 - 
+Saving model with best valid AUROC score: 0.6025637984275818

@@ -33,7 +33,7 @@ class CustomNeuralNet(torch.nn.Module):
             model_name, pretrained=pretrained, in_chans=in_channels
         )
         config.logger.info(
-            f"Model: {model_name} \nPretrained: {pretrained} \nIn Channels: {in_channels}"
+            f"\nModel: {model_name} \nPretrained: {pretrained} \nIn Channels: {in_channels}"
         )
 
         self.backbone.reset_classifier(

@@ -1,36 +1,23 @@
-import datetime
-import gc
-import os
-import tempfile
 import time
-from collections import defaultdict
+
 
 import numpy as np
-import pytz
+
 import torch
-from torch._C import device
+
 from config import config, global_params
 from src import metrics, models
 
-# Metrics
-from sklearn.metrics import (
-    mean_squared_error,
-    accuracy_score,
-    f1_score,
-    roc_auc_score,
-    roc_curve,
-    auc,
-)
+
 from tqdm.auto import tqdm
 from typing import List, Dict, Union
-from src import dataset, callbacks
-import cv2
+from src import callbacks
+
 from pathlib import Path
 
 from pytorch_grad_cam.utils.image import show_cam_on_image
 from pytorch_grad_cam import GradCAM
 
-import torchmetrics
 
 FILES = global_params.FilePaths()
 TRAIN_PARAMS = global_params.GlobalTrainParams()
@@ -175,9 +162,9 @@ class Trainer:
         )
 
         # TODO: To check robustness of the code for confusion matrix.
-        macro_cm = metrics.tp_fp_tn_fn_binary(
-            y_true=y_trues, y_prob=y_probs, class_labels=[0, 1, 2, 3, 4]
-        )
+        # macro_cm = metrics.tp_fp_tn_fn_binary(
+        #     y_true=y_trues, y_prob=y_probs, class_labels=[0, 1, 2, 3, 4]
+        # )
 
         return {"accuracy": torchmetrics_accuracy, "macro_auroc": macro_auc}
 
@@ -191,33 +178,6 @@ class Trainer:
         """
         for param_group in optimizer.param_groups:
             return param_group["lr"]
-
-    def run_train(self, train_loader: torch.utils.data.DataLoader) -> Dict:
-        """[summary]
-        Args:
-            train_loader (torch.utils.data.DataLoader): [description]
-        Returns:
-            Dict: [description]
-        """
-
-        # train start time
-        train_start_time = time.time()
-
-        # get avg train loss for this epoch
-        train_one_epoch_dict = self.train_one_epoch(train_loader)
-        self.train_loss = train_one_epoch_dict["train_loss"]
-        self.train_loss_history.append(self.train_loss)
-
-        # total time elapsed for this epoch
-
-        train_elapsed_time = time.strftime(
-            "%H:%M:%S", time.gmtime(time.time() - train_start_time)
-        )
-
-        return {
-            "train_loss": self.train_loss_history,
-            "time_elapsed": train_elapsed_time,
-        }
 
     def fit(
         self,
@@ -238,32 +198,36 @@ class Trainer:
         self.best_valid_loss = np.inf
 
         config.logger.info(
-            f"Training on Fold {fold} and using {self.params.model_name}"
+            f"\nTraining on Fold {fold} and using {self.params.model_name}\n"
         )
 
         for _epoch in range(1, self.params.epochs + 1):
+
             # get current epoch's learning rate
             curr_lr = self.get_lr(self.optimizer)
-            # get current time
-            timestamp = datetime.datetime.now(
-                pytz.timezone("Asia/Singapore")
-            ).strftime("%Y-%m-%d %H-%M-%S")
-            # print current time and lr
-            config.logger.info("\nTime: {}\nLR: {}".format(timestamp, curr_lr))
 
-            train_dict: Dict = self.run_train(train_loader)
+            ############################ Start of Training #############################
 
-            # Note that train_dict['train_loss'] returns a list of loss [0.3, 0.2, 0.1 etc] and since _epoch starts from 1, we therefore
-            # index this list by _epoch - 1 to get the current epoch loss.
-            print(train_dict["train_loss"][_epoch - 1])
-            config.logger.info(
-                f"[RESULT]: Train. Epoch {_epoch} | Avg Train Summary Loss: {train_dict['train_loss'][_epoch-1]:.3f} | "
-                f"Time Elapsed: {train_dict['time_elapsed']}"
+            train_start_time = time.time()
+
+            train_one_epoch_dict = self.train_one_epoch(train_loader)
+            train_loss = train_one_epoch_dict["train_loss"]
+
+            # total time elapsed for this epoch
+            train_time_elapsed = time.strftime(
+                "%H:%M:%S", time.gmtime(time.time() - train_start_time)
             )
 
-            ########################### Start of Validation ###########################
-            # valid start time
-            val_start_time = time.time()
+            config.logger.info(
+                f"[RESULT]: Train. Epoch {_epoch} | Avg Train Summary Loss: {train_loss:.3f} | "
+                f"Learning Rate: {curr_lr:.5f} | Time Elapsed: {train_time_elapsed}\n"
+            )
+
+            ########################### End of Training #################################
+
+            ########################### Start of Validation #############################
+
+            val_start_time = time.time()  # start time for validation
             valid_one_epoch_dict = self.valid_one_epoch(valid_loader)
 
             (
@@ -295,13 +259,14 @@ class Trainer:
                 valid_metrics_dict["accuracy"],
                 valid_metrics_dict["macro_auroc"],
             )
-            print(valid_accuracy, valid_macro_auroc)
+
             # TODO: Still need save each metric for each epoch into a list history. Rename properly
             # TODO: Log each metric to wandb and log file.
+
             config.logger.info(
                 f"[RESULT]: Validation. Epoch {_epoch} | Avg Val Summary Loss: {valid_loss:.3f} | "
                 f"Avg Val Accuracy: {valid_accuracy:.3f} | Avg Val Macro AUROC: {valid_macro_auroc:.3f} | "
-                f"Time Elapsed: {valid_elapsed_time}"
+                f"Time Elapsed: {valid_elapsed_time}\n"
             )
 
             # TODO: Log into wandb or something.
@@ -366,7 +331,7 @@ class Trainer:
                 )
 
                 config.logger.info(
-                    f"Saving model with best valid AUROC score: {self.best_valid_score}"
+                    f"\nSaving model with best valid AUROC score: {self.best_valid_score}"
                 )
 
             ########################## End of Early Stopping ############################
@@ -379,10 +344,13 @@ class Trainer:
                 if isinstance(
                     self.scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau
                 ):
-                    self.scheduler.step(self.val_dict["val_acc"])
+                    self.scheduler.step(self.monitored_metric["metric_score"])
                 else:
                     self.scheduler.step()
 
+            ########################## End of Scheduler #################################
+
+            ########################## Load Best Model ##################################
             # Load current checkpoint so we can get model's oof predictions, often in the form of probabilities.
             curr_fold_best_checkpoint = self.load(
                 Path(
@@ -390,11 +358,13 @@ class Trainer:
                     f"{self.params.model_name}_best_{self.monitored_metric['metric_name']}_fold_{fold}.pt",
                 )
             )
-            return curr_fold_best_checkpoint
+            ########################## End of Load Best Model ###########################
+
+        return curr_fold_best_checkpoint
 
     def train_one_epoch(
         self, train_loader: torch.utils.data.DataLoader
-    ) -> float:
+    ) -> Dict[str, float]:
         """Train one epoch of the model."""
 
         metric_monitor = metrics.MetricMonitor()
@@ -412,8 +382,7 @@ class Trainer:
 
             # unpack
             inputs = data["X"].to(self.device, non_blocking=True)
-
-            # # .view(-1, 1)
+            # .view(-1, 1) if BCELoss
             targets = data["y"].to(self.device, non_blocking=True)
             logits = self.model(inputs)  # Forward pass logits
 
@@ -422,7 +391,6 @@ class Trainer:
             assert logits.size() == (batch_size, TRAIN_PARAMS.num_classes)
 
             y_train_prob = torch.nn.Softmax(dim=1)(logits)
-            # sigmoid_prob = torch.sigmoid(logits).detach().cpu().numpy()
 
             self.optimizer.zero_grad()  # reset gradients
             curr_batch_train_loss = self.train_criterion(targets, logits)
@@ -446,6 +414,7 @@ class Trainer:
         # self.log_weights(step)
         # running loss
         # self.log_scalar("running_train_loss", curr_batch_train_loss.data.item(), step)
+        # TODO: Consider enhancement that returns the same dict as valid_one_epoch.
         return {"train_loss": average_cumulative_train_loss}
 
     # @torch.no_grad
@@ -496,7 +465,7 @@ class Trainer:
                 average_cumulative_valid_loss += (
                     curr_batch_val_loss.item() - average_cumulative_valid_loss
                 ) / (step)
-                valid_bar.set_description(f"Validation. {metric_monitor}")
+                valid_bar.set_description(f"Validation. Loss: {metric_monitor}")
 
                 # For OOF score and other computation.
                 # TODO: Consider giving numerical example. Consider rolling back to targets.cpu().numpy() if torch fails.
@@ -549,6 +518,10 @@ class Trainer:
         # mlflow.log_metric(name, value, step=step)
 
     def log_weights(self, step):
+        """Log the weights of the model to both MLflow and TensorBoard
+        Args:
+            step ([type]): [description]
+        """
         self.writer.add_histogram(
             tag="conv1_weight",
             values=self.model.conv1.weight.data,
