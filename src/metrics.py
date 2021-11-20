@@ -4,6 +4,8 @@ from sklearn import metrics
 from typing import List
 
 import numpy as np
+import torchmetrics
+from torchmetrics.classification import auroc
 
 
 class AverageLossMeter:
@@ -83,12 +85,12 @@ def multiclass_label_binarize(
     return np.column_stack(columns)
 
 
-def multiclass_roc_auc_score(y_true, y_prob, classes=None):
+def multiclass_roc_auc_score(y_true, y_score, classes=None):
     """Compute ROC-AUC score for each class in a multiclass dataset.
 
     Args:
         y_true (np.ndarray of shape (n_samples, n_classes)) True labels
-        y_prob (np.ndarray of shape (n_samples, n_classes)) Target scores
+        y_score (np.ndarray of shape (n_samples, n_classes)) Target scores
         classes (array-like of shape (n_classes,)) List of dataset classes. If `None`,
             the lexicographical order of the labels in `y_true` is used.
 
@@ -101,10 +103,10 @@ def multiclass_roc_auc_score(y_true, y_prob, classes=None):
 
     def oneclass_roc_auc_score(class_id):
         y_true_class = y_true_multiclass[:, class_id]
-        y_prob_class = y_prob[:, class_id]
+        y_score_class = y_score[:, class_id]
 
         fpr, tpr, _ = metrics.roc_curve(
-            y_true=y_true_class, y_score=y_prob_class, pos_label=1
+            y_true=y_true_class, y_score=y_score_class, pos_label=1
         )
 
         return metrics.auc(fpr, tpr)
@@ -112,3 +114,29 @@ def multiclass_roc_auc_score(y_true, y_prob, classes=None):
     return [
         oneclass_roc_auc_score(class_id) for class_id in range(len(classes))
     ]
+
+
+def multiclass_roc_auc_score_torch(y_true, y_prob, num_classes=None):
+    """Compute ROC-AUC score for each class in a multiclass dataset.
+
+    Args:
+        y_true (np.ndarray of shape (n_samples, n_classes)) True labels
+        y_prob (np.ndarray of shape (n_samples, n_classes)) Target scores
+        classes (array-like of shape (n_classes,)) List of dataset classes. If `None`,
+            the lexicographical order of the labels in `y_true` is used.
+
+    Returns:
+        array-like: ROC-AUC score for each class, in the same order as `classes`
+    """
+
+    auroc_all_classes = []
+    roc = torchmetrics.ROC(num_classes=num_classes)
+    y_true = torch.flatten(y_true)
+    print(y_prob.shape)
+    print(y_true.shape)
+    fpr_all_classes, tpr_all_classes, _ = roc(y_prob, y_true)
+    for fpr, tpr in zip(fpr_all_classes, tpr_all_classes):
+        curr_class_auroc = torchmetrics.AUC(reorder=True)(fpr, tpr)
+        auroc_all_classes.append(curr_class_auroc)
+
+    return auroc_all_classes, torch.mean(torch.stack(auroc_all_classes), dim=0)

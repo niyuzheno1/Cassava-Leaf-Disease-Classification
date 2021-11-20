@@ -73,6 +73,8 @@ def prepare_loaders(
         df_valid = df_folds[df_folds["fold"] == fold].sample(
             LOADER_PARAMS.train_loader["batch_size"] * 2
         )
+        # TODO: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.sample.html
+        # TODO: Consider adding stratified sampling to avoid df_valid having 0 num samples of minority class, causing issues when computing roc.
         df_oof = df_valid.copy()
     else:
         df_train = df_folds[df_folds["fold"] != fold].reset_index(drop=True)

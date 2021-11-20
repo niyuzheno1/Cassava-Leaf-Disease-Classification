@@ -148,7 +148,23 @@ class Trainer:
             average="micro",
             top_k=None,
         )(torch.as_tensor(y_trues), torch.as_tensor(y_preds))
-        print(torchmetrics_accuracy)
+        auroc_all_classes, auroc_mean = metrics.multiclass_roc_auc_score_torch(
+            torch.as_tensor(y_trues),
+            torch.as_tensor(y_probs),
+            num_classes=TRAIN_PARAMS.num_classes,
+        )
+
+        auroc_torchmetrics = torchmetrics.AUROC(num_classes=5, average="macro")(
+            torch.as_tensor(y_probs),
+            torch.as_tensor(y_trues).flatten(),
+        )
+        print("aurcroc torchmetrics", auroc_torchmetrics)
+        print(auroc_all_classes, auroc_mean)
+
+        auroc_sklearn = roc_auc_score(
+            y_trues, y_probs, average="macro", multi_class="ovr"
+        )
+        print("auroc sklearn", auroc_sklearn)
 
         return {"accuracy": accuracy}
 
