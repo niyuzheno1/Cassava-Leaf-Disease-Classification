@@ -87,6 +87,7 @@ class Trainer:
         self.early_stopping = early_stopping
 
         # list to contain various train metrics
+        # TODO: how to add more metrics? wandb log too. Maybe save to model artifacts?
         self.train_loss_history: List = []
         self.train_metric_history: List = []
         self.val_loss_history: List = []

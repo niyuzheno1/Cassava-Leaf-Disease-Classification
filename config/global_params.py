@@ -150,8 +150,8 @@ class SchedulerParams:
 
 @dataclass
 class GlobalTrainParams:
-    debug: bool = True
-    epochs: int = 3
+    debug: bool = False
+    epochs: int = 6
     mixup: bool = False
     model_name: str = ModelParams().model_name
     num_classes: int = ModelParams().output_dimension
