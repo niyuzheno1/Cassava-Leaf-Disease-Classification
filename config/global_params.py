@@ -106,7 +106,7 @@ class ModelParams:
     # model_name: str = "efficientnet_b0"
     # model_name: str = "vit_small_patch16_224"
     # model_name: str = "resnet34d"
-    model_name: str = "tf_efficientnet_b4_ns"
+    model_name: str = "tf_efficientnet_b0_ns"
     pretrained: bool = True
     input_channels: int = 3
     output_dimension: int = 5

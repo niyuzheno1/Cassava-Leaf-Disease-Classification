@@ -1,5 +1,9 @@
 from collections import defaultdict
 import torch
+from sklearn import metrics
+from typing import List
+
+import numpy as np
 
 
 class AverageLossMeter:
@@ -24,6 +28,8 @@ class AverageLossMeter:
 
 
 class MetricMonitor:
+    """Monitor Metrics"""
+
     def __init__(self, float_precision=3):
         self.float_precision = float_precision
         self.reset()
@@ -51,3 +57,58 @@ class MetricMonitor:
                 for (metric_name, metric) in self.metrics.items()
             ]
         )
+
+
+def multiclass_label_binarize(
+    y: np.ndarray, class_labels: List[int], pos_label=1, neg_label=0
+):
+    """Binarize labels in one-vs-all fashion.
+    # TODO: to replace with the above vstack method.
+
+    Args:
+        y (np.ndarray) Sequence of integer labels to encode
+        class_labels (array-like) Labels for each class
+        pos_label (int) Value for positive labels
+        neg_label (int) Value for negative labels
+    Returns:
+        np.ndarray of shape (n_samples, n_classes) Encoded dataset
+    """
+    if isinstance(y, list):
+        y = np.asarray(y)
+
+    columns = [
+        np.where(y == label, pos_label, neg_label) for label in class_labels
+    ]
+
+    return np.column_stack(columns)
+
+
+def multiclass_roc_auc_score(y_true, y_prob, classes=None):
+    """Compute ROC-AUC score for each class in a multiclass dataset.
+
+    Args:
+        y_true (np.ndarray of shape (n_samples, n_classes)) True labels
+        y_prob (np.ndarray of shape (n_samples, n_classes)) Target scores
+        classes (array-like of shape (n_classes,)) List of dataset classes. If `None`,
+            the lexicographical order of the labels in `y_true` is used.
+
+    Returns:
+        array-like: ROC-AUC score for each class, in the same order as `classes`
+    """
+    classes = np.unique(y_true) if classes is None else classes
+
+    y_true_multiclass = multiclass_label_binarize(y_true, class_labels=classes)
+
+    def oneclass_roc_auc_score(class_id):
+        y_true_class = y_true_multiclass[:, class_id]
+        y_prob_class = y_prob[:, class_id]
+
+        fpr, tpr, _ = metrics.roc_curve(
+            y_true=y_true_class, y_score=y_prob_class, pos_label=1
+        )
+
+        return metrics.auc(fpr, tpr)
+
+    return [
+        oneclass_roc_auc_score(class_id) for class_id in range(len(classes))
+    ]

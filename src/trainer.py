@@ -22,7 +22,7 @@ from sklearn.metrics import (
     auc,
 )
 from tqdm.auto import tqdm
-from typing import List, Dict
+from typing import List, Dict, Union
 from src import dataset, callbacks
 import cv2
 from pathlib import Path
@@ -138,11 +138,18 @@ class Trainer:
         loss = loss_fn(y_logits, y_true)
         return loss
 
-    def get_classification_metrics(
-        self, y_trues_history, y_preds_history, y_probs_history
-    ):
+    def get_classification_metrics(self, y_trues, y_preds, y_probs):
+        # TODO: To implement Ian's Results class here so that we can return as per the following link: https://ghnreigns.github.io/reighns-ml-website/supervised_learning/classification/breast_cancer_wisconsin/Stage%206%20-%20Modelling%20%28Preprocessing%20and%20Spot%20Checking%29/
 
-        accuracy = accuracy_score(y_trues_history, y_preds_history)
+        accuracy = accuracy_score(y_trues, y_preds)
+        torchmetrics_accuracy = torchmetrics.Accuracy(
+            threshold=0.5,
+            num_classes=TRAIN_PARAMS.num_classes,
+            average="micro",
+            top_k=None,
+        )(torch.as_tensor(y_trues), torch.as_tensor(y_preds))
+        print(torchmetrics_accuracy)
+
         return {"accuracy": accuracy}
 
     def get_lr(self, optimizer) -> float:
@@ -183,50 +190,51 @@ class Trainer:
             "time_elapsed": train_elapsed_time,
         }
 
-    def run_val(self, val_loader: torch.utils.data.DataLoader) -> Dict:
-        """[summary]
-        Args:
-            val_loader (torch.utils.data.DataLoader): [description]
-        Returns:
-            Dict: [description]
-        """
+    # def run_val(self, valid_loader: torch.utils.data.DataLoader) -> Dict:
+    #     """[summary]
+    #     Args:
+    #         valid_loader (torch.utils.data.DataLoader): The validation data loader.
+    #     Returns:
+    #         Dict: [description]
+    #     """
 
-        # train start time
-        val_start_time = time.time()
+    #     # train start time
+    #     val_start_time = time.time()
 
-        # get avg train loss for this epoch
-        valid_one_epoch_dict = self.valid_one_epoch(val_loader)
+    #     # get avg train loss for this epoch
+    #     valid_one_epoch_dict = self.valid_one_epoch(valid_loader)
 
-        (
-            self.valid_loss_history,
-            self.valid_trues_history,
-            self.valid_preds_history,
-            self.valid_probs_history,
-        ) = (
-            valid_one_epoch_dict["valid_loss"],
-            valid_one_epoch_dict["valid_trues"],
-            valid_one_epoch_dict["valid_preds"],
-            valid_one_epoch_dict["valid_probs"],
-        )
+    #     (
+    #         self.valid_loss,
+    #         self.valid_trues,
+    #         self.valid_logits,
+    #         self.valid_preds,
+    #         self.valid_probs,
+    #     ) = (
+    #         valid_one_epoch_dict["valid_loss"],
+    #         valid_one_epoch_dict["valid_trues"],
+    #         valid_one_epoch_dict["valid_logits"],
+    #         valid_one_epoch_dict["valid_preds"],
+    #         valid_one_epoch_dict["valid_probs"],
+    #     )
 
-        # total time elapsed for this epoch
+    #     # total time elapsed for this epoch
+    #     val_elapsed_time = time.strftime(
+    #         "%H:%M:%S", time.gmtime(time.time() - val_start_time)
+    #     )
 
-        val_elapsed_time = time.strftime(
-            "%H:%M:%S", time.gmtime(time.time() - val_start_time)
-        )
-
-        return {
-            "valid_loss_history": self.valid_loss_history,
-            "valid_trues_history": self.valid_trues_history,
-            "valid_preds_history": self.valid_preds_history,
-            "valid_probs_history": self.valid_probs_history,
-            "valid_time_elapsed": val_elapsed_time,
-        }
+    #     return {
+    #         "valid_loss_history": self.valid_loss,
+    #         "valid_trues_history": self.valid_trues_history,
+    #         "valid_preds_history": self.valid_preds_history,
+    #         "valid_probs_history": self.valid_probs_history,
+    #         "valid_time_elapsed": val_elapsed_time,
+    #     }
 
     def fit(
         self,
         train_loader: torch.utils.data.DataLoader,
-        val_loader: torch.utils.data.DataLoader,
+        valid_loader: torch.utils.data.DataLoader,
         fold: int = None,
     ):
         """[summary]
@@ -265,31 +273,39 @@ class Trainer:
                 f"Time Elapsed: {train_dict['time_elapsed']}"
             )
 
-            self.valid_dict: Dict = self.run_val(val_loader)
+            ########################### Start of Validation ###########################
+            # valid start time
+            val_start_time = time.time()
+            valid_one_epoch_dict = self.valid_one_epoch(valid_loader)
+
             (
-                self.valid_loss_history,
-                self.valid_trues_history,
-                self.valid_preds_history,
-                self.valid_probs_history,
-                self.valid_time_elapsed,
+                valid_loss,
+                valid_trues,
+                valid_logits,
+                valid_preds,
+                valid_probs,
             ) = (
-                self.valid_dict["valid_loss_history"],
-                self.valid_dict["valid_trues_history"],
-                self.valid_dict["valid_preds_history"],
-                self.valid_dict["valid_probs_history"],
-                self.valid_dict["valid_time_elapsed"],
+                valid_one_epoch_dict["valid_loss"],
+                valid_one_epoch_dict["valid_trues"],
+                valid_one_epoch_dict["valid_logits"],
+                valid_one_epoch_dict["valid_preds"],
+                valid_one_epoch_dict["valid_probs"],
             )
 
-            print(self.valid_preds_history)
-            print(self.valid_trues_history)
-            self.valid_accuracy = self.get_classification_metrics(
-                self.valid_trues_history,
-                self.valid_preds_history,
-                self.valid_probs_history,
+            # total time elapsed for this epoch
+            valid_elapsed_time = time.strftime(
+                "%H:%M:%S", time.gmtime(time.time() - val_start_time)
             )
-            print(self.valid_loss_history)
-            print(self.valid_accuracy)
+
+            valid_accuracy = self.get_classification_metrics(
+                valid_trues,
+                valid_preds,
+                valid_probs,
+            )
+            print(valid_loss)
+            print(valid_accuracy)
             # TODO: Still need save each metric for each epoch into a list history. Rename properly
+            # TODO: Log each metric to wandb and log file.
 
             # Note that train_dict['train_loss'] returns a list of loss [0.3, 0.2, 0.1 etc] and since _epoch starts from 1, we therefore
             # index this list by _epoch - 1 to get the current epoch loss.
@@ -404,15 +420,27 @@ class Trainer:
         return {"train_loss": average_cumulative_train_loss}
 
     # @torch.no_grad
-    def valid_one_epoch(self, val_loader):
-        """Validate one training epoch."""
-        # TODO: Try to make results type more consistent. eg: sigmoid_prob is detached but targets is not detached.
-        # TODO: Make names the same, for example valid_probs should be consistent throughout, however, we have y_probs and valid_probs.
-        # set to eval mode
-        self.model.eval()
+    def valid_one_epoch(
+        self, valid_loader: torch.utils.data.DataLoader
+    ) -> Dict[str, Union[float, np.ndarray]]:
+        """Validate the model on the validation set for one epoch.
+
+        Args:
+            valid_loader (torch.utils.data.DataLoader): The validation set dataloader.
+
+        Returns:
+            Dict[str, np.ndarray]:
+                valid_loss (float): The validation loss for each epoch.
+                valid_trues (np.ndarray): The ground truth labels for each validation set. shape = (num_samples, 1)
+                valid_logits (np.ndarray): The logits for each validation set. shape = (num_samples, num_classes)
+                valid_preds (np.ndarray): The predicted labels for each validation set. shape = (num_samples, 1)
+                valid_probs (np.ndarray): The predicted probabilities for each validation set. shape = (num_samples, num_classes)
+        """
+
+        self.model.eval()  # set to eval mode
         metric_monitor = metrics.MetricMonitor()
         average_cumulative_valid_loss: float = 0.0
-        valid_bar = tqdm(val_loader)
+        valid_bar = tqdm(valid_loader)
 
         valid_logits, valid_trues, valid_preds, valid_probs = [], [], [], []
 
@@ -431,11 +459,7 @@ class Trainer:
                 assert targets.size() == (batch_size,)
                 assert logits.size() == (batch_size, TRAIN_PARAMS.num_classes)
 
-                # Store outputs that are needed to compute various metrics
-                # shape = [bs, 1] | shape = [bs, num_classes] if softmax
-                # applied along dimension 1.
-                # sigmoid_prob = torch.sigmoid(logits).cpu().numpy()
-
+                # TODO: Refer to my RANZCR notes on difference between Softmax and Sigmoid with examples.
                 y_valid_prob = torch.nn.Softmax(dim=1)(logits)
                 y_valid_pred = torch.argmax(y_valid_prob, axis=1)
 
@@ -443,30 +467,45 @@ class Trainer:
                 average_cumulative_valid_loss += (
                     curr_batch_val_loss.item() - average_cumulative_valid_loss
                 ) / (step)
+                valid_bar.set_description(f"Validation. {metric_monitor}")
 
-                # for OOF score and other computation
-                valid_preds.extend(y_valid_pred.cpu().numpy())
-                valid_probs.extend(y_valid_prob.cpu().numpy())
+                # For OOF score and other computation.
+                # TODO: Consider giving numerical example.
                 valid_trues.extend(targets.cpu().numpy())
                 valid_logits.extend(logits.cpu().numpy())
+                valid_preds.extend(y_valid_pred.cpu().numpy())
+                valid_probs.extend(y_valid_prob.cpu().numpy())
+
                 # TODO: To make this look like what Ian and me did in our breast cancer project.
                 # TODO: For softmax predictions, then valid_probs must be of shape []
 
                 # running loss
                 # self.log_scalar("running_val_loss", curr_batch_val_loss.data.item(), step)
 
-            # argmax = np.argmax(Y_PROBS, axis=1)
-            # correct = np.equal(argmax, np.asarray(Y_TRUES))
-            # total = correct.shape[0]
-            # # argmax = [1, 2, 1] Y_TRUES = [1, 1, 2] -> correct = [True, False, False] -> num_correct = 1 and total = 3 -> acc = 1/3
-            # num_correct = np.sum(correct)
-            # accuracy = (num_correct / total) * 100
+        # We should work with numpy arrays.
+        # vstack here to stack the list of numpy arrays.
+        # a = [np.asarray([1,2,3]), np.asarray([4,5,6])]
+        # np.vstack(a) -> array([[1, 2, 3], [4, 5, 6]])
+        valid_trues, valid_logits, valid_preds, valid_probs = (
+            np.vstack(valid_trues),
+            np.vstack(valid_logits),
+            np.vstack(valid_preds),
+            np.vstack(valid_probs),
+        )
+        num_valid_samples = len(valid_trues)
+        assert valid_trues.shape == valid_preds.shape == (num_valid_samples, 1)
+        assert (
+            valid_logits.shape
+            == valid_probs.shape
+            == (num_valid_samples, TRAIN_PARAMS.num_classes)
+        )
 
         return {
             "valid_loss": average_cumulative_valid_loss,
+            "valid_trues": valid_trues,
+            "valid_logits": valid_logits,
             "valid_preds": valid_preds,
             "valid_probs": valid_probs,
-            "valid_trues": valid_trues,
         }
 
     def log_scalar(self, name: str, value: float, step: int):
