@@ -133,12 +133,19 @@ def forward_pass(
     """
     utils.seed_all()
     model.to(device)
+
     batch_size = 4
     image_size = (3, 224, 224)
+    try:
+        config.logger.info("Model Summary:")
+        torchsummary.summary(model, image_size)
+    except RuntimeError:
+        config.logger.debug("Check the channel number.")
+
     X = torch.randn((batch_size, *image_size)).to(device)
     y = model(image=X)
     config.logger.info("Forward Pass Successful!")
     config.logger.info(f"x: {X.shape} \ny: {y.shape}")
     config.logger.info(f"x[0][0][0]: {X[0][0][0][0]} \ny[0][0][0]: {y[0][0]}")
-    summary = torchsummary_wrapper(model, image_size)
-    return X, y, summary
+
+    return X, y

@@ -65,13 +65,14 @@ def prepare_loaders(
     df_folds: pd.DataFrame, fold: int
 ) -> Union[torch.utils.data.DataLoader, torch.utils.data.DataLoader]:
     """Prepare Data Loaders."""
+    debug_multiplier = 32
 
     if TRAIN_PARAMS.debug:
         df_train = df_folds[df_folds["fold"] != fold].sample(
-            LOADER_PARAMS.train_loader["batch_size"] * 2
+            LOADER_PARAMS.train_loader["batch_size"] * debug_multiplier
         )
         df_valid = df_folds[df_folds["fold"] == fold].sample(
-            LOADER_PARAMS.train_loader["batch_size"] * 2
+            LOADER_PARAMS.train_loader["batch_size"] * debug_multiplier
         )
         # TODO: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.sample.html
         # TODO: Consider adding stratified sampling to avoid df_valid having 0 num samples of minority class, causing issues when computing roc.

@@ -138,35 +138,48 @@ class Trainer:
         loss = loss_fn(y_logits, y_true)
         return loss
 
-    def get_classification_metrics(self, y_trues, y_preds, y_probs):
+    def get_classification_metrics(
+        self,
+        y_trues: torch.Tensor,
+        y_preds: torch.Tensor,
+        y_probs: torch.Tensor,
+    ):
+        """[summary]
+
+        Args:
+            y_trues (torch.Tensor): dtype=[torch.int64], shape=(num_samples, 1); (May be float if using BCEWithLogitsLoss)
+            y_preds (torch.Tensor): dtype=[torch.int64], shape=(num_samples, 1);
+            y_probs (torch.Tensor): dtype=[torch.float32], shape=(num_samples, num_classes);
+
+        Returns:
+            [type]: [description]
+        """
         # TODO: To implement Ian's Results class here so that we can return as per the following link: https://ghnreigns.github.io/reighns-ml-website/supervised_learning/classification/breast_cancer_wisconsin/Stage%206%20-%20Modelling%20%28Preprocessing%20and%20Spot%20Checking%29/
-
-        accuracy = accuracy_score(y_trues, y_preds)
-        torchmetrics_accuracy = torchmetrics.Accuracy(
+        # TODO: To think whether include num_classes, threshold etc in the arguments.
+        torchmetrics_accuracy = metrics.accuracy_score_torch(
+            y_trues,
+            y_preds,
+            num_classes=TRAIN_PARAMS.num_classes,
             threshold=0.5,
-            num_classes=TRAIN_PARAMS.num_classes,
-            average="micro",
-            top_k=None,
-        )(torch.as_tensor(y_trues), torch.as_tensor(y_preds))
-        auroc_all_classes, auroc_mean = metrics.multiclass_roc_auc_score_torch(
-            torch.as_tensor(y_trues),
-            torch.as_tensor(y_probs),
+        )
+
+        auroc_dict = metrics.multiclass_roc_auc_score_torch(
+            y_trues,
+            y_probs,
             num_classes=TRAIN_PARAMS.num_classes,
         )
 
-        auroc_torchmetrics = torchmetrics.AUROC(num_classes=5, average="macro")(
-            torch.as_tensor(y_probs),
-            torch.as_tensor(y_trues).flatten(),
+        auroc_all_classes, macro_auc = (
+            auroc_dict["auroc_per_class"],
+            auroc_dict["macro_auc"],
         )
-        print("aurcroc torchmetrics", auroc_torchmetrics)
-        print(auroc_all_classes, auroc_mean)
 
-        auroc_sklearn = roc_auc_score(
-            y_trues, y_probs, average="macro", multi_class="ovr"
+        # TODO: To check robustness of the code for confusion matrix.
+        macro_cm = metrics.tp_fp_tn_fn_binary(
+            y_true=y_trues, y_prob=y_probs, class_labels=[0, 1, 2, 3, 4]
         )
-        print("auroc sklearn", auroc_sklearn)
 
-        return {"accuracy": accuracy}
+        return {"accuracy": torchmetrics_accuracy, "macro_auroc": macro_auc}
 
     def get_lr(self, optimizer) -> float:
         """Get the learning rate of the current epoch.
@@ -206,47 +219,6 @@ class Trainer:
             "time_elapsed": train_elapsed_time,
         }
 
-    # def run_val(self, valid_loader: torch.utils.data.DataLoader) -> Dict:
-    #     """[summary]
-    #     Args:
-    #         valid_loader (torch.utils.data.DataLoader): The validation data loader.
-    #     Returns:
-    #         Dict: [description]
-    #     """
-
-    #     # train start time
-    #     val_start_time = time.time()
-
-    #     # get avg train loss for this epoch
-    #     valid_one_epoch_dict = self.valid_one_epoch(valid_loader)
-
-    #     (
-    #         self.valid_loss,
-    #         self.valid_trues,
-    #         self.valid_logits,
-    #         self.valid_preds,
-    #         self.valid_probs,
-    #     ) = (
-    #         valid_one_epoch_dict["valid_loss"],
-    #         valid_one_epoch_dict["valid_trues"],
-    #         valid_one_epoch_dict["valid_logits"],
-    #         valid_one_epoch_dict["valid_preds"],
-    #         valid_one_epoch_dict["valid_probs"],
-    #     )
-
-    #     # total time elapsed for this epoch
-    #     val_elapsed_time = time.strftime(
-    #         "%H:%M:%S", time.gmtime(time.time() - val_start_time)
-    #     )
-
-    #     return {
-    #         "valid_loss_history": self.valid_loss,
-    #         "valid_trues_history": self.valid_trues_history,
-    #         "valid_preds_history": self.valid_preds_history,
-    #         "valid_probs_history": self.valid_probs_history,
-    #         "valid_time_elapsed": val_elapsed_time,
-    #     }
-
     def fit(
         self,
         train_loader: torch.utils.data.DataLoader,
@@ -263,7 +235,7 @@ class Trainer:
         Returns:
             [type]: [description]
         """
-        best_val_loss = np.inf
+        self.best_valid_loss = np.inf
 
         config.logger.info(
             f"Training on Fold {fold} and using {self.params.model_name}"
@@ -313,56 +285,97 @@ class Trainer:
                 "%H:%M:%S", time.gmtime(time.time() - val_start_time)
             )
 
-            valid_accuracy = self.get_classification_metrics(
+            valid_metrics_dict = self.get_classification_metrics(
                 valid_trues,
                 valid_preds,
                 valid_probs,
             )
-            print(valid_loss)
-            print(valid_accuracy)
+
+            valid_accuracy, valid_macro_auroc = (
+                valid_metrics_dict["accuracy"],
+                valid_metrics_dict["macro_auroc"],
+            )
+            print(valid_accuracy, valid_macro_auroc)
             # TODO: Still need save each metric for each epoch into a list history. Rename properly
             # TODO: Log each metric to wandb and log file.
-
-            # Note that train_dict['train_loss'] returns a list of loss [0.3, 0.2, 0.1 etc] and since _epoch starts from 1, we therefore
-            # index this list by _epoch - 1 to get the current epoch loss.
-
             config.logger.info(
-                f"[RESULT]: Validation. Epoch {_epoch} | Avg Val Summary Loss: {self.val_dict['val_loss'][_epoch-1]:.3f} | "
-                f"Time Elapsed: {self.valid_time_elapsed}"
+                f"[RESULT]: Validation. Epoch {_epoch} | Avg Val Summary Loss: {valid_loss:.3f} | "
+                f"Avg Val Accuracy: {valid_accuracy:.3f} | Avg Val Macro AUROC: {valid_macro_auroc:.3f} | "
+                f"Time Elapsed: {valid_elapsed_time}"
             )
 
+            # TODO: Log into wandb or something.
             # self.log_scalar("Val Acc", val_dict["valid_rmse"][_epoch - 1], _epoch)
 
-            # Early Stopping code block
+            ########################### End of Validation ##############################
+
+            ########################## Start of Early Stopping ##########################
+            ########################## Start of Model Saving ############################
+
+            # User has to choose a few metrics to monitor.
+            # Here I chose valid_loss and valid_macro_auroc.
+
+            self.monitored_metric = {
+                "metric_name": "valid_macro_auroc",
+                "metric_score": torch.clone(valid_macro_auroc),
+                "mode": "max",
+            }
+            # Metric to optimize, either min or max.
+            self.best_valid_score = (
+                -np.inf if self.monitored_metric["mode"] == "max" else np.inf
+            )
+
             if self.early_stopping is not None:
                 best_score, early_stop = self.early_stopping.should_stop(
-                    curr_epoch_score=self.val_dict["val_loss"][_epoch - 1]
+                    curr_epoch_score=valid_loss
                 )
-                self.best_loss = best_score
-                # TODO: SAVE MODEL
-                # self.save(
-                #     "{self.param.model['model_name']}_best_loss_fold_{fold}.pt")
+                self.best_valid_loss = best_score
+
                 if early_stop:
                     config.logger.info("Stopping Early!")
                     break
+                # TODO: Add save_model_artifacts here as well.
             else:
-                if self.val_dict["val_loss"][_epoch - 1] < best_val_loss:
-                    best_val_loss = self.val_dict["val_loss"][_epoch - 1]
+                if valid_loss < self.best_valid_loss:
+                    self.best_valid_loss = valid_loss
 
-                # if self.val_dict["valid_rmse"][_epoch - 1] < best_rmse:
-                #     best_rmse = self.val_dict["valid_rmse"][_epoch - 1]
-                #     self.save_model_artifacts(
-                #         Path(
-                #             FILES.weight_path,
-                #             f"{self.params.model_name}_best_rmse_fold_{fold}.pt",
-                #         )
-                #     )
-                #     config.logger.info(
-                #         f"Saving model with best RMSE: {best_rmse}"
-                #     )
+                if self.monitored_metric["mode"] == "max":
+                    if (
+                        self.monitored_metric["metric_score"]
+                        > self.best_valid_score
+                    ):
+                        self.best_valid_score = self.monitored_metric[
+                            "metric_score"
+                        ]
+                else:
+                    if (
+                        self.monitored_metric["metric_score"]
+                        < self.best_valid_score
+                    ):
+                        self.best_valid_score = self.monitored_metric[
+                            "metric_score"
+                        ]
 
-            # Scheduler Step code block: note the special case for ReduceLROnplateau.
+                self.save_model_artifacts(
+                    Path(
+                        FILES.weight_path,
+                        f"{self.params.model_name}_best_{self.monitored_metric['metric_name']}_fold_{fold}.pt",
+                    ),
+                    valid_trues,
+                    valid_probs,
+                )
+
+                config.logger.info(
+                    f"Saving model with best valid AUROC score: {self.best_valid_score}"
+                )
+
+            ########################## End of Early Stopping ############################
+            ########################## End of Model Saving ##############################
+
+            ########################## Start of Scheduler ###############################
+
             if self.scheduler is not None:
+                # Special Case for ReduceLROnPlateau
                 if isinstance(
                     self.scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau
                 ):
@@ -374,7 +387,7 @@ class Trainer:
             curr_fold_best_checkpoint = self.load(
                 Path(
                     FILES.weight_path,
-                    f"{self.params.model_name}_best_rmse_fold_{fold}.pt",
+                    f"{self.params.model_name}_best_{self.monitored_metric['metric_name']}_fold_{fold}.pt",
                 )
             )
             return curr_fold_best_checkpoint
@@ -486,11 +499,11 @@ class Trainer:
                 valid_bar.set_description(f"Validation. {metric_monitor}")
 
                 # For OOF score and other computation.
-                # TODO: Consider giving numerical example.
-                valid_trues.extend(targets.cpu().numpy())
-                valid_logits.extend(logits.cpu().numpy())
-                valid_preds.extend(y_valid_pred.cpu().numpy())
-                valid_probs.extend(y_valid_prob.cpu().numpy())
+                # TODO: Consider giving numerical example. Consider rolling back to targets.cpu().numpy() if torch fails.
+                valid_trues.extend(targets.cpu())
+                valid_logits.extend(logits.cpu())
+                valid_preds.extend(y_valid_pred.cpu())
+                valid_probs.extend(y_valid_prob.cpu())
 
                 # TODO: To make this look like what Ian and me did in our breast cancer project.
                 # TODO: For softmax predictions, then valid_probs must be of shape []
@@ -503,10 +516,10 @@ class Trainer:
         # a = [np.asarray([1,2,3]), np.asarray([4,5,6])]
         # np.vstack(a) -> array([[1, 2, 3], [4, 5, 6]])
         valid_trues, valid_logits, valid_preds, valid_probs = (
-            np.vstack(valid_trues),
-            np.vstack(valid_logits),
-            np.vstack(valid_preds),
-            np.vstack(valid_probs),
+            torch.vstack(valid_trues),
+            torch.vstack(valid_logits),
+            torch.vstack(valid_preds),
+            torch.vstack(valid_probs),
         )
         num_valid_samples = len(valid_trues)
         assert valid_trues.shape == valid_preds.shape == (num_valid_samples, 1)
@@ -561,7 +574,12 @@ class Trainer:
         self.model.eval()
         torch.save(self.model.state_dict(), path)
 
-    def save_model_artifacts(self, path: str) -> None:
+    def save_model_artifacts(
+        self,
+        path: str,
+        valid_trues: torch.Tensor,
+        valid_probs: torch.Tensor,
+    ) -> None:
         """Save the weight for the best evaluation loss.
         oof_preds: np.array of shape [num_samples, num_classes] and represent the predictions for each fold.
         oof_trues: np.array of shape [num_samples, 1] and represent the true labels for each fold.
@@ -572,8 +590,8 @@ class Trainer:
                 "model_state_dict": self.model.state_dict(),
                 "optimizer_state_dict": self.optimizer.state_dict(),
                 "scheduler_state_dict": self.scheduler.state_dict(),
-                "oof_preds": self.val_dict["valid_probs"],
-                "oof_trues": self.val_dict["valid_trues"],
+                "oof_trues": valid_trues,
+                "oof_preds": valid_probs,
             },
             path,
         )

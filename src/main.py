@@ -86,12 +86,6 @@ def train_one_fold(df_folds: pd.DataFrame, fold: int, is_plot: bool = False):
 
     # Model, cost function and optimizer instancing
     model = models.CustomNeuralNet().to(device)
-    try:
-        config.logger.info("Model Summary:")
-
-        torchsummary.summary(model, (3, 224, 224))
-    except RuntimeError:
-        config.logger.debug("Check the channel number.")
 
     optimizer = trainer.get_optimizer(
         model=model, optimizer_params=OPTIMIZER_PARAMS
